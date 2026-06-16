@@ -21,11 +21,10 @@ b1_bw = st.sidebar.number_input("請輸入體重 (kg)", min_value=0.0, max_value
 
 st.sidebar.write("---")
 st.sidebar.markdown("**GA 胎齡 (F1 + H1)**")
-# F1: GA週
-f1_ga_wk = st.sidebar.number_input("GA 週數 (F1)", min_value=20, max_value=45, value=0, step=1)
+# F1: GA週 (把 value 改為 36)
+f1_ga_wk = st.sidebar.number_input("GA 週數 (F1)", min_value=20, max_value=45, value=36, step=1)
 # H1: GA天
 h1_ga_day = st.sidebar.number_input("GA 天數 (H1)", min_value=0, max_value=6, value=0, step=1)
-
 st.sidebar.write("---")
 # L1: PNA出生天數
 st.sidebar.markdown("**PNA 出生天數 (L1)**")
