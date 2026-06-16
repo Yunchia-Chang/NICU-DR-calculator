@@ -39,7 +39,7 @@ q1_pma_wk = pma_total_days // 7
 s1_pma_day = pma_total_days % 7
 
 
-# --- 📌 側邊欄：常用藥物類別選單 (只有當使用者在第一個 Tab 時會有感) ---
+# --- 📌 側邊欄：常用藥物類別選單 ---
 st.sidebar.write("---")
 st.sidebar.header("📁 藥物類別選擇")
 category = st.sidebar.selectbox(
@@ -64,7 +64,8 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.metric(label="👶 病患體重 (BW)", value=f"{b1_bw:.2f} kg" if b1_bw > 0 else "未輸入")
 with col2:
-    st.metric(label="⏳ 胎齡 (GA)", value=f"{f1_ga_wk} 週 + {f1_ga_day} 天")
+    # 修正：精準對應變數名稱 f1_ga_wk 與 h1_ga_day
+    st.metric(label="⏳ 胎齡 (GA)", value=f"{f1_ga_wk} 週 + {h1_ga_day} 天")
 with col3:
     st.success(f"🧮 **PMA (受孕齡) [Q1+S1]**：\n### {q1_pma_wk} 週 + {s1_pma_day} 天")
 
