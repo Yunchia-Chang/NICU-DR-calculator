@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(
     page_title="NICU智慧計算機", 
     page_icon="👶", 
-    layout="wide"  # 寬螢幕佈局
+    layout="wide"  # 寬螢幕佈局（極度適合多欄並排）
 )
 
 # --- APP 標題 ---
@@ -71,7 +71,7 @@ with col3:
 st.write("---")
 
 
-# --- 核心功能頁籤 (對應圖片的五大工作表) ---
+# --- 核心功能頁籤 ---
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "💊 常用藥物計算機", 
     "⚡ Ion dosage", 
@@ -82,83 +82,94 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 
 
 # =========================================================================
-# TAB 1: 常用藥物計算機 (內部根據側邊欄下拉選單動態顯示)
+# TAB 1: 常用藥物計算機
 # =========================================================================
 with tab1:
     st.header(f"📂 當前分類：{category}")
     st.write("---")
 
     # -------------------------------------------------------------
-    # 大項 1: Antimicrobial agents
+    # 大項 1: Antimicrobial agents (每行顯示 3 種藥物)
     # -------------------------------------------------------------
     if category == "1. Antimicrobial agents":
         
-        # 使用 st.container(border=True) 將 Ampicillin 獨立成一個大方塊
-        with st.container(border=True):
-            st.markdown("## 🟥 **AMPICILLIN**")
-            st.markdown("---")  
-            st.markdown("#### 📌 Normal 療程建議")
+        if b1_bw <= 0:
+            st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
+        else:
+            # 💡 關鍵：切分出三個水平欄位
+            drug_col1, drug_col2, drug_col3 = st.columns(3)
             
-            if b1_bw <= 0:
-                st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
-            else:
-                # 轉化您的 Excel 劑量公式 (B4)
-                if ga_total_days <= 244:  # GA ≦ 34+6wk (244天)
-                    if l1_pna <= 7:
-                        b4_dose = b1_bw * 50
-                        is_valid = True
-                    else:
-                        b4_dose = b1_bw * 75
-                        is_valid = True
-                else:  # GA ≧ 35+0wk
-                    if l1_pna <= 28:
-                        b4_dose = b1_bw * 50
-                        is_valid = True
-                    else:
-                        b4_dose = "超過28天(請手動確認)"
-                        is_valid = False
-                        
-                # 轉化您的 Excel 頻次公式 (D4)
-                if ga_total_days <= 244:
-                    d4_freq = "Q12H"
-                else:
-                    d4_freq = "Q8H"
+            # --- 【第一欄：AMPICILLIN】 ---
+            with drug_col1:
+                with st.container(border=True):
+                    st.markdown("### 🟥 **AMPICILLIN**")
+                    st.caption("Normal 療程建議")
+                    st.markdown("---")
                     
-                # 前端呈現結果
-                col_dose, col_freq = st.columns(2)
-                with col_dose:
-                    if is_valid:
-                        st.metric(label="💰 建議單次劑量 (B4)", value=f"{b4_dose:.1f} mg/dose")
+                    # Ampicillin 邏輯計算
+                    if ga_total_days <= 244:
+                        b4_dose = b1_bw * 50 if l1_pna <= 7 else b1_bw * 75
+                        d4_freq = "Q12H"
+                        is_valid = True
                     else:
-                        st.error(f"❌ 劑量警示 (B4)：{b4_dose}")
-                with col_freq:
-                    if is_valid or l1_pna > 28:
-                        st.metric(label="⏱️ 給藥頻次 (D4)", value=d4_freq)
+                        if l1_pna <= 28:
+                            b4_dose = b1_bw * 50
+                            d4_freq = "Q8H"
+                            is_valid = True
+                        else:
+                            b4_dose = "超過28天(請手動確認)"
+                            d4_freq = "Q8H"
+                            is_valid = False
+                    
+                    if is_valid:
+                        st.metric(label="💰 單次劑量", value=f"{b4_dose:.1f} mg")
+                        st.metric(label="⏱️ 給藥頻次", value=d4_freq)
+                    else:
+                        st.error(f"❌ 警示：{b4_dose}")
+            
+            # --- 【第二欄：藥物 B (模擬並排效果)】 ---
+            with drug_col2:
+                with st.container(border=True):
+                    st.markdown("### 🟦 **GENTAMICIN**")
+                    st.caption("範例模擬藥物")
+                    st.markdown("---")
+                    
+                    # 隨意寫一個模擬數字，供您看排版效果
+                    st.metric(label="💰 單次劑量", value=f"{b1_bw * 4 / 2:.1f} mg")
+                    st.metric(label="⏱️ 給藥頻次", value="Q24H")
+            
+            # --- 【第三欄：藥物 C (模擬並排效果)】 ---
+            with drug_col3:
+                with st.container(border=True):
+                    st.markdown("### 🟩 **CEFTAZIDIME**")
+                    st.caption("範例模擬藥物")
+                    st.markdown("---")
+                    
+                    # 隨意寫一個模擬數字，供您看排版效果
+                    st.metric(label="💰 單次劑量", value=f"{b1_bw * 50:.1f} mg")
+                    st.metric(label="⏱️ 給藥頻次", value="Q12H")
+
+            # 💡 提示：如果未來有第 4, 5, 6 種藥物，只需要在下方重新宣告一組：
+            # drug_col4, drug_col5, drug_col6 = st.columns(3)
+            # 依此類推，版面就會非常整齊好看！
 
     # -------------------------------------------------------------
-    # 大項 2 ~ 9: 預留未來擴充公式的區塊
+    # 大項 2 ~ 9
     # -------------------------------------------------------------
     elif category == "2. Diuretics":
-        st.info("💡 這裡即將放入 Diuretics (利尿劑) 類藥物公式。請提供 Excel 欄位與邏輯即可加入。")
-        
+        st.info("💡 這裡即將放入 Diuretics (利尿劑) 類藥物公式。")
     elif category == "3. PDA":
-        st.info("💡 這裡即將放入 PDA (開放性動脈導管) 治療藥物公式。")
-        
+        st.info("💡 這裡即將放入 PDA 治療藥物公式。")
     elif category == "4. 肺高壓":
         st.info("💡 這裡即將放入 肺高壓 相關藥物公式。")
-        
     elif category == "5. Apnea":
-        st.info("💡 這裡即將放入 Apnea (新生兒呼吸暂停/Caffeine等) 藥物公式。")
-        
+        st.info("💡 這裡即將放入 Apnea 藥物公式。")
     elif category == "6. Seizure control":
-        st.info("💡 這裡即將放入 Seizure control (抗癲癇藥物) 公式。")
-        
+        st.info("💡 這裡即將放入 Seizure control 公式。")
     elif category == "7. Sedation":
-        st.info("💡 這裡即將放入 Sedation (鎮靜止痛藥物) 公式。")
-        
+        st.info("💡 這裡即將放入 Sedation 公式。")
     elif category == "8. Miscellaneous.GCSF":
         st.info("💡 這裡即將放入 GCSF 等其它各類特殊藥物公式。")
-        
     elif category == "9. 胃腸類藥品/營養補充品/維他命/其它":
         st.info("💡 這裡即將放入 胃腸類藥品、營養補充品、維他命與其它藥品公式。")
 
