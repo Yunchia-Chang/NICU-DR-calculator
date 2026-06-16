@@ -21,7 +21,7 @@ b1_bw = st.sidebar.number_input("請輸入體重 (kg)", min_value=0.0, max_value
 
 st.sidebar.write("---")
 st.sidebar.markdown("**GA 胎齡 (F1 + H1)**")
-# F1: GA週 (預設改為 36 週，避免小於 min_value 報錯)
+# F1: GA週
 f1_ga_wk = st.sidebar.number_input("GA 週數 (F1)", min_value=20, max_value=45, value=36, step=1)
 # H1: GA天
 h1_ga_day = st.sidebar.number_input("GA 天數 (H1)", min_value=0, max_value=6, value=0, step=1)
@@ -39,13 +39,32 @@ q1_pma_wk = pma_total_days // 7
 s1_pma_day = pma_total_days % 7
 
 
+# --- 📌 側邊欄：常用藥物類別選單 (只有當使用者在第一個 Tab 時會有感) ---
+st.sidebar.write("---")
+st.sidebar.header("📁 藥物類別選擇")
+category = st.sidebar.selectbox(
+    "請選擇常用藥物大項：",
+    [
+        "1. Antimicrobial agents",
+        "2. Diuretics",
+        "3. PDA",
+        "4. 肺高壓",
+        "5. Apnea",
+        "6. Seizure control",
+        "7. Sedation",
+        "8. Miscellaneous.GCSF",
+        "9. 胃腸類藥品/營養補充品/維他命/其它"
+    ]
+)
+
+
 # --- 頂部發育指標看板 ---
 st.subheader("📊 當前病患生理指標核對")
 col1, col2, col3 = st.columns(3)
 with col1:
     st.metric(label="👶 病患體重 (BW)", value=f"{b1_bw:.2f} kg" if b1_bw > 0 else "未輸入")
 with col2:
-    st.metric(label="⏳ 胎齡 (GA)", value=f"{f1_ga_wk} 週 + {h1_ga_day} 天")
+    st.metric(label="⏳ 胎齡 (GA)", value=f"{f1_ga_wk} 週 + {f1_ga_day} 天")
 with col3:
     st.success(f"🧮 **PMA (受孕齡) [Q1+S1]**：\n### {q1_pma_wk} 週 + {s1_pma_day} 天")
 
@@ -63,64 +82,94 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 
 
 # =========================================================================
-# TAB 1: 常用藥物計算機
+# TAB 1: 常用藥物計算機 (內部根據側邊欄下拉選單動態顯示)
 # =========================================================================
 with tab1:
-    st.header("分類大項：第一類 - Antimicrobial agents")
-    
-    # 建立藥物區塊：Ampicillin
-    st.markdown("### 🧬 Ampicillin")
-    st.markdown("#### 📌 Normal 療程建議")
-    
-    # 安全防錯檢查：檢查體重是否為 0
-    if b1_bw <= 0:
-        st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
-    else:
-        # 1. 轉化您的 Excel 劑量公式 (B4)
-        if ga_total_days <= 244:  # GA ≦ 34+6wk (244天)
-            if l1_pna <= 7:
-                b4_dose = b1_bw * 50
-                is_valid = True
-            else:
-                b4_dose = b1_bw * 75
-                is_valid = True
-        else:  # GA ≧ 35+0wk
-            if l1_pna <= 28:
-                b4_dose = b1_bw * 50
-                is_valid = True
-            else:
-                b4_dose = "超過28天(請手動確認)"
-                is_valid = False
-                
-        # 2. 轉化您的 Excel 頻次公式 (D4)
-        if ga_total_days <= 244:
-            d4_freq = "Q12H"
+    st.header(f"📂 當前分類：{category}")
+    st.write("---")
+
+    # -------------------------------------------------------------
+    # 大項 1: Antimicrobial agents
+    # -------------------------------------------------------------
+    if category == "1. Antimicrobial agents":
+        st.markdown("### 🧬 Ampicillin")
+        st.markdown("#### 📌 Normal 療程建議")
+        
+        if b1_bw <= 0:
+            st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
         else:
-            d4_freq = "Q8H"
-            
-        # 3. 前端呈現結果
-        col_dose, col_freq = st.columns(2)
-        with col_dose:
-            if is_valid:
-                st.metric(label="💰 建議單次劑量 (B4)", value=f"{b4_dose:.1f} mg/dose")
+            # 轉化您的 Excel 劑量公式 (B4)
+            if ga_total_days <= 244:  # GA ≦ 34+6wk (244天)
+                if l1_pna <= 7:
+                    b4_dose = b1_bw * 50
+                    is_valid = True
+                else:
+                    b4_dose = b1_bw * 75
+                    is_valid = True
+            else:  # GA ≧ 35+0wk
+                if l1_pna <= 28:
+                    b4_dose = b1_bw * 50
+                    is_valid = True
+                else:
+                    b4_dose = "超過28天(請手動確認)"
+                    is_valid = False
+                    
+            # 轉化您的 Excel 頻次公式 (D4)
+            if ga_total_days <= 244:
+                d4_freq = "Q12H"
             else:
-                st.error(f"❌ 劑量警示 (B4)：{b4_dose}")
+                d4_freq = "Q8H"
                 
-        with col_freq:
-            if is_valid or l1_pna > 28:
-                st.metric(label="⏱️ 給藥頻次 (D4)", value=d4_freq)
+            # 前端呈現結果
+            col_dose, col_freq = st.columns(2)
+            with col_dose:
+                if is_valid:
+                    st.metric(label="💰 建議單次劑量 (B4)", value=f"{b4_dose:.1f} mg/dose")
+                else:
+                    st.error(f"❌ 劑量警示 (B4)：{b4_dose}")
+            with col_freq:
+                if is_valid or l1_pna > 28:
+                    st.metric(label="⏱️ 給藥頻次 (D4)", value=d4_freq)
+
+    # -------------------------------------------------------------
+    # 大項 2 ~ 9: 預留未來擴充公式的區塊
+    # -------------------------------------------------------------
+    elif category == "2. Diuretics":
+        st.info("💡 這裡即將放入 Diuretics (利尿劑) 類藥物公式。請提供 Excel 欄位與邏輯即可加入。")
+        
+    elif category == "3. PDA":
+        st.info("💡 這裡即將放入 PDA (開放性動脈導管) 治療藥物公式。")
+        
+    elif category == "4. 肺高壓":
+        st.info("💡 這裡即將放入 肺高壓 相關藥物公式。")
+        
+    elif category == "5. Apnea":
+        st.info("💡 這裡即將放入 Apnea (新生兒呼吸暂停/Caffeine等) 藥物公式。")
+        
+    elif category == "6. Seizure control":
+        st.info("💡 這裡即將放入 Seizure control (抗癲癇藥物) 公式。")
+        
+    elif category == "7. Sedation":
+        st.info("💡 這裡即將放入 Sedation (鎮靜止痛藥物) 公式。")
+        
+    elif category == "8. Miscellaneous.GCSF":
+        st.info("💡 這裡即將放入 GCSF 等其它各類特殊藥物公式。")
+        
+    elif category == "9. 胃腸類藥品/營養補充品/維他命/其它":
+        st.info("💡 這裡即將放入 胃腸類藥品、營養補充品、維他命與其它藥品公式。")
+
 
 # =========================================================================
-# 其餘分頁暫時保留作為骨架
+# 其餘大 Tab 分頁暫時保留
 # =========================================================================
 with tab2:
-    st.info("⏳ Ion dosage 模組建構中，等待輸入下一批公式...")
+    st.info("⏳ Ion dosage 模組建構中...")
 with tab3:
-    st.info("⏳ DART.BURST 模組建構中，等待輸入下一批公式...")
+    st.info("⏳ DART.BURST 模組建構中...")
 with tab4:
-    st.info("⏳ PUMP 總表115 模組建構中，等待輸入下一批公式...")
+    st.info("⏳ PUMP 總表115 模組建構中...")
 with tab5:
-    st.info("⏳ Dexmedetomidine 模組建構中，等待輸入下一批公式...")
+    st.info("⏳ Dexmedetomidine 模組建構中...")
 
 # --- 頁尾 ---
 st.write("---")
