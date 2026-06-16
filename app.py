@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(
     page_title="NICU智慧計算機", 
     page_icon="👶", 
-    layout="wide"  # 寬螢幕佈局（極度適合多欄並排）
+    layout="wide"  # 寬螢幕佈局
 )
 
 # --- APP 標題 ---
@@ -12,7 +12,7 @@ st.title("👶 NICU智慧計算機")
 st.caption("🔒 兒科/新生兒加護病房專用 | 臨床決策支援系統 (CDSS)")
 st.write("---")
 
-# --- 側邊欄：統一輸入基本資料 (對應您的 Excel 儲存格位置) ---
+# --- 側邊欄：統一輸入基本資料 (對應 Excel 儲存格位置) ---
 st.sidebar.header("📥 病患基本資料輸入")
 
 # B1: 體重
@@ -96,7 +96,7 @@ with tab1:
         if b1_bw <= 0:
             st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
         else:
-            # 💡 關鍵：切分出三個水平欄位
+            # 切分出三個水平欄位
             drug_col1, drug_col2, drug_col3 = st.columns(3)
             
             # --- 【第一欄：AMPICILLIN】 ---
@@ -122,36 +122,44 @@ with tab1:
                             is_valid = False
                     
                     if is_valid:
-                        st.metric(label="💰 單次劑量", value=f"{b4_dose:.1f} mg")
-                        st.metric(label="⏱️ 給藥頻次", value=d4_freq)
+                        st.markdown("📋 **單次劑量：**")
+                        # 💡 已修正：將原本的 mg 改為 mg/dose
+                        st.markdown(f"<p style='font-size: 32px; font-weight: bold; color: #1E88E5; margin-bottom: 0px;'>{b4_dose:.1f} mg/dose</p>", unsafe_allow_html=True)
+                        
+                        st.markdown("⏱️ **給藥頻次：**")
+                        st.markdown(f"<p style='font-size: 28px; font-weight: bold; color: #F4511E; margin-top: 0px;'>{d4_freq}</p>", unsafe_allow_html=True)
                     else:
                         st.error(f"❌ 警示：{b4_dose}")
             
-            # --- 【第二欄：藥物 B (模擬並排效果)】 ---
+            # --- 【第二欄：GENTAMICIN 模擬大字】 ---
             with drug_col2:
                 with st.container(border=True):
                     st.markdown("### 🟦 **GENTAMICIN**")
                     st.caption("範例模擬藥物")
                     st.markdown("---")
                     
-                    # 隨意寫一個模擬數字，供您看排版效果
-                    st.metric(label="💰 單次劑量", value=f"{b1_bw * 4 / 2:.1f} mg")
-                    st.metric(label="⏱️ 給藥頻次", value="Q24H")
+                    g_dose = b1_bw * 4 / 2
+                    st.markdown("📋 **單次劑量：**")
+                    # 💡 已修正：將原本的 mg 改為 mg/dose
+                    st.markdown(f"<p style='font-size: 32px; font-weight: bold; color: #1E88E5; margin-bottom: 0px;'>{g_dose:.1f} mg/dose</p>", unsafe_allow_html=True)
+                    
+                    st.markdown("⏱️ **給藥頻次：**")
+                    st.markdown("<p style='font-size: 28px; font-weight: bold; color: #F4511E; margin-top: 0px;'>Q24H</p>", unsafe_allow_html=True)
             
-            # --- 【第三欄：藥物 C (模擬並排效果)】 ---
+            # --- 【第三欄：CEFTAZIDIME 模擬大字】 ---
             with drug_col3:
                 with st.container(border=True):
                     st.markdown("### 🟩 **CEFTAZIDIME**")
                     st.caption("範例模擬藥物")
                     st.markdown("---")
                     
-                    # 隨意寫一個模擬數字，供您看排版效果
-                    st.metric(label="💰 單次劑量", value=f"{b1_bw * 50:.1f} mg")
-                    st.metric(label="⏱️ 給藥頻次", value="Q12H")
-
-            # 💡 提示：如果未來有第 4, 5, 6 種藥物，只需要在下方重新宣告一組：
-            # drug_col4, drug_col5, drug_col6 = st.columns(3)
-            # 依此類推，版面就會非常整齊好看！
+                    c_dose = b1_bw * 50
+                    st.markdown("📋 **單次劑量：**")
+                    # 💡 已修正：將原本的 mg 改為 mg/dose
+                    st.markdown(f"<p style='font-size: 32px; font-weight: bold; color: #1E88E5; margin-bottom: 0px;'>{c_dose:.1f} mg/dose</p>", unsafe_allow_html=True)
+                    
+                    st.markdown("⏱️ **給藥頻次：**")
+                    st.markdown("<p style='font-size: 28px; font-weight: bold; color: #F4511E; margin-top: 0px;'>Q12H</p>", unsafe_allow_html=True)
 
     # -------------------------------------------------------------
     # 大項 2 ~ 9
