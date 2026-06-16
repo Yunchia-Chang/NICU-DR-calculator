@@ -64,7 +64,6 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.metric(label="👶 病患體重 (BW)", value=f"{b1_bw:.2f} kg" if b1_bw > 0 else "未輸入")
 with col2:
-    # 修正：精準對應變數名稱 f1_ga_wk 與 h1_ga_day
     st.metric(label="⏳ 胎齡 (GA)", value=f"{f1_ga_wk} 週 + {h1_ga_day} 天")
 with col3:
     st.success(f"🧮 **PMA (受孕齡) [Q1+S1]**：\n### {q1_pma_wk} 週 + {s1_pma_day} 天")
@@ -93,44 +92,48 @@ with tab1:
     # 大項 1: Antimicrobial agents
     # -------------------------------------------------------------
     if category == "1. Antimicrobial agents":
-        st.markdown("### 🧬 Ampicillin")
-        st.markdown("#### 📌 Normal 療程建議")
         
-        if b1_bw <= 0:
-            st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
-        else:
-            # 轉化您的 Excel 劑量公式 (B4)
-            if ga_total_days <= 244:  # GA ≦ 34+6wk (244天)
-                if l1_pna <= 7:
-                    b4_dose = b1_bw * 50
-                    is_valid = True
-                else:
-                    b4_dose = b1_bw * 75
-                    is_valid = True
-            else:  # GA ≧ 35+0wk
-                if l1_pna <= 28:
-                    b4_dose = b1_bw * 50
-                    is_valid = True
-                else:
-                    b4_dose = "超過28天(請手動確認)"
-                    is_valid = False
-                    
-            # 轉化您的 Excel 頻次公式 (D4)
-            if ga_total_days <= 244:
-                d4_freq = "Q12H"
+        # 使用 st.container(border=True) 將 Ampicillin 獨立成一個大方塊
+        with st.container(border=True):
+            st.markdown("## 🟥 **AMPICILLIN**")
+            st.markdown("---")  
+            st.markdown("#### 📌 Normal 療程建議")
+            
+            if b1_bw <= 0:
+                st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
             else:
-                d4_freq = "Q8H"
-                
-            # 前端呈現結果
-            col_dose, col_freq = st.columns(2)
-            with col_dose:
-                if is_valid:
-                    st.metric(label="💰 建議單次劑量 (B4)", value=f"{b4_dose:.1f} mg/dose")
+                # 轉化您的 Excel 劑量公式 (B4)
+                if ga_total_days <= 244:  # GA ≦ 34+6wk (244天)
+                    if l1_pna <= 7:
+                        b4_dose = b1_bw * 50
+                        is_valid = True
+                    else:
+                        b4_dose = b1_bw * 75
+                        is_valid = True
+                else:  # GA ≧ 35+0wk
+                    if l1_pna <= 28:
+                        b4_dose = b1_bw * 50
+                        is_valid = True
+                    else:
+                        b4_dose = "超過28天(請手動確認)"
+                        is_valid = False
+                        
+                # 轉化您的 Excel 頻次公式 (D4)
+                if ga_total_days <= 244:
+                    d4_freq = "Q12H"
                 else:
-                    st.error(f"❌ 劑量警示 (B4)：{b4_dose}")
-            with col_freq:
-                if is_valid or l1_pna > 28:
-                    st.metric(label="⏱️ 給藥頻次 (D4)", value=d4_freq)
+                    d4_freq = "Q8H"
+                    
+                # 前端呈現結果
+                col_dose, col_freq = st.columns(2)
+                with col_dose:
+                    if is_valid:
+                        st.metric(label="💰 建議單次劑量 (B4)", value=f"{b4_dose:.1f} mg/dose")
+                    else:
+                        st.error(f"❌ 劑量警示 (B4)：{b4_dose}")
+                with col_freq:
+                    if is_valid or l1_pna > 28:
+                        st.metric(label="⏱️ 給藥頻次 (D4)", value=d4_freq)
 
     # -------------------------------------------------------------
     # 大項 2 ~ 9: 預留未來擴充公式的區塊
@@ -172,6 +175,16 @@ with tab4:
 with tab5:
     st.info("⏳ Dexmedetomidine 模組建構中...")
 
-# --- 頁尾 ---
+
+# --- 底部專業版權宣告與免責聲明 ---
 st.write("---")
-st.caption("🔒 NICU智慧計算機 | 臨床決策支援系統 (CDSS) 安全防護中")
+st.markdown(
+    """
+    <div style='text-align: center; color: #888888; font-size: 13px; line-height: 1.8;'>
+        🔒 <b>臨床決策支援系統 (CDSS) 免責宣告</b>：本工具計算結果僅供醫療專業人員參考核對，處方開立仍應以臨床實際病情與主治醫師之最終判斷為準。<br>
+        © 2026 版權所有．智慧財產保護中<br>
+        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務組 張運佳藥師 所有</b>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
