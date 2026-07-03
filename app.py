@@ -45,7 +45,7 @@ pma_total_days = ga_total_days + l1_pna
 q1_pma_wk = pma_total_days // 7
 s1_pma_day = pma_total_days % 7
 
-# 側邊欄：常用藥物大項
+# 側邊欄：常用藥物大項（💡 已修正：5. Apnea/RDS Surfactant 改名）
 st.sidebar.write("---")
 st.sidebar.header("📁 藥物類別選擇")
 category = st.sidebar.radio(
@@ -55,7 +55,7 @@ category = st.sidebar.radio(
         "2. Diuretics",
         "3. PDA",
         "4. 肺高壓",
-        "5. Apnea",
+        "5. Apnea/RDS Surfactant",
         "6. Seizure control",
         "7. Sedation",
         "8. Miscellaneous.GCSF",
@@ -415,12 +415,13 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K26):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q4H</p>", unsafe_allow_html=True)
 
     # -------------------------------------------------------------
-    # 🎯 大項 5: Apnea (全面激活，對應 image_da604c.png 表格邏輯)
+    # 🎯 大項 5: Apnea/RDS Surfactant (包含新增 Poractant alfa)
     # -------------------------------------------------------------
-    elif category == "5. Apnea":
+    elif category == "5. Apnea/RDS Surfactant":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
         else:
+            # 排列一：原有的呼吸暫停三聯軍
             ap_col1, ap_col2, ap_col3 = st.columns(3)
             
             # 1. Aminophylline
@@ -428,49 +429,59 @@ with tab1:
                 with st.container(border=True):
                     st.markdown("## 🟥 **Aminophylline**")
                     st.markdown("---")
-                    
                     ap_load = 5.0 * b1_bw
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (I29):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{ap_load:.2f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (I29):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ap_load:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     ap_maint = 1.0 * b1_bw
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose (L29):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{ap_maint:.2f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose frequency (N29):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose (L29):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ap_maint:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose frequency (N29):</p><p style='margin:0 0 2px 0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             
             # 2. Theophylline
             with ap_col2:
                 with st.container(border=True):
                     st.markdown("## 🟦 **Theophylline**")
                     st.markdown("---")
-                    
                     theo_load_mg = 5.0 * b1_bw
                     theo_load_ml = (5.0 * b1_bw) / 5.34
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (I30 / O30):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{theo_load_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;|&nbsp; <span style='color:#4CAF50;'>{theo_load_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
-                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (I30 / O30):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{theo_load_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;|&nbsp; <span style='color:#4CAF50;'>{theo_load_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     theo_maint_mg = 1.0 * b1_bw
                     theo_maint_ml = (1.0 * b1_bw) / 5.34
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose (L30 / P30):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{theo_maint_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;|&nbsp; <span style='color:#4CAF50;'>{theo_maint_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
-                    
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose frequency (N30):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose (L30 / P30):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{theo_maint_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;|&nbsp; <span style='color:#4CAF50;'>{theo_maint_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose frequency (N30):</p><p style='margin:0 0 2px 0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             
             # 3. Caffeine citrate
             with ap_col3:
                 with st.container(border=True):
                     st.markdown("## 🟩 **Caffeine citrate**")
                     st.markdown("---")
-                    
                     caf_load = 20.0 * b1_bw
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose(20 mg/kg) (I31):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{caf_load:.2f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose(20 mg/kg) (I31):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{caf_load:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     caf_maint = 10.0 * b1_bw
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose(10 mg/kg) (L31):</p><p style='margin:0 0 2px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{caf_maint:.2f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True) # 調整墊高高度與 Aminophylline 平齊
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose(10 mg/kg) (L31):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{caf_maint:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
+
+            # 排列二：💡 依照 image_dac90c.png 新增之表面張力素
+            st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+            ap_col4, ap_col5, ap_col6 = st.columns(3)
+            
+            with ap_col4:
+                with st.container(border=True):
+                    st.markdown("## 🫁 **Poractant alfa: ET**")
+                    st.markdown("---")
+                    
+                    pnt_mg = 200.0 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose (I34):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{pnt_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    pnt_ml = 2.5 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (L34):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{pnt_ml:.1f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    
+            with ap_col5: st.write("")
+            with ap_col6: st.write("")
 
     # 其餘大項暫留
     elif category == "6. Seizure control": st.info("💡 抗癲癇藥物公式建構中...")
     elif category == "7. Sedation": st.info("💡 鎮靜止痛藥物模組建構中...")
     elif category == "8. Miscellaneous.GCSF": st.info("💡 GCSF 特殊藥物公式建構中...")
-    elif category == "9. 胃腸類藥品/營養補充品/維命/其它": st.info("💡 胃腸營養模組建構中...")
+    elif category == "9. 胃腸類藥品/營養補充品/維他命/其它": st.info("💡 胃腸營養模組建構中...")
 
 # --- 其餘分頁 Tab 暫留 ---
 with tab2: st.info("⏳ Ion dosage 模組建構中...")
