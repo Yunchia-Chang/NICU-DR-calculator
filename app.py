@@ -229,9 +229,10 @@ with tab1:
             
             with r3_c2:
                 with st.container(border=True):
-                    st.markdown("### 🛸 **Meropenem**")
+                    st.markdown("## 🛸 **Meropenem**")
                     mrp_b23 = b1_bw * 20 if ga_total_days <= 223 else (b1_bw * 20 if l1_pna < 14 else b1_bw * 30)
-                    mrp_d23 = "Q12H" if (ga_total_days <= 223 wildlife l1_pna < 14) else "Q8H"
+                    # 💡 已修正：將手誤打錯的 wildlife 修正為 Python 正確語法 and
+                    mrp_d23 = "Q12H" if (ga_total_days <= 223 and l1_pna < 14) else "Q8H"
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Normal dose:</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mrp_b23:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> <span style='font-size: 16px; color: #F4511E; margin-left: 8px;'>{mrp_d23}</span></p>", unsafe_allow_html=True)
                     mrp_b24_ok = True
                     if l1_pna <= 60:
@@ -501,26 +502,21 @@ with tab1:
                 st.write("")
 
     # -------------------------------------------------------------
-    # 🎯 大項 7: Sedation (全面激活，對應 image_dbb245.png 表格邏輯)
+    # 大項 7: Sedation
     # -------------------------------------------------------------
     elif category == "7. Sedation":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             sd_col1, sd_col2, sd_col3 = st.columns(3)
-            
-            # 1. Chloral hydrate 10%
             with sd_col1:
                 with st.container(border=True):
                     st.markdown("## 🟥 **Chloral hydrate 10%**")
                     st.markdown("---")
-                    
                     sd_dose_mg = 25.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose(25mg/kg) (S10):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sd_dose_mg:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     sd_dose_ml = sd_dose_mg / 100.0
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (V10 = S10/100):</p><p style='margin:0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{sd_dose_ml:.2f} <span style='font-size:13px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
-                    
             with sd_col2: st.write("")
             with sd_col3: st.write("")
 
@@ -530,7 +526,7 @@ with tab1:
 
 # --- 其餘分頁 Tab 暫留 ---
 with tab2: st.info("⏳ Ion dosage 模組建構中...")
-with tab3: st.info("⏳ DART.BURST 模組建構中...")
+with tab3: st.info("⏳ DART.BURST 模組建构中...")
 with tab4: st.info("⏳ PUMP 總表115 模組建構中...")
 with tab5: st.info("⏳ Dexmedetomidine 模組建構中...")
 
