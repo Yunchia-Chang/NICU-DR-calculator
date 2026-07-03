@@ -28,7 +28,7 @@ with col_sub:
 st.write("---")
 
 # --- 側邊欄：基本資料輸入 ---
-st.sidebar.header("📥 病健基本資料輸入")
+st.sidebar.header("📥 病患基本資料輸入")
 b1_bw = st.sidebar.number_input("BW 體重 (B1) (kg)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
 
 st.sidebar.write("---")
@@ -341,65 +341,91 @@ with tab1:
                 st.write("")
 
     # -------------------------------------------------------------
-    # 大項 3: PDA (含口服 mL 數換算更新)
+    # 大項 3: PDA
     # -------------------------------------------------------------
     elif category == "3. PDA":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             pda_col1, pda_col2, pda_col3 = st.columns(3)
-            
-            # 1. Ibuprofen (Standard)
             with pda_col1:
                 with st.container(border=True):
                     st.markdown("## 🧬 **Ibuprofen (Standard)**")
                     st.markdown("---")
-                    
-                    # 針劑劑量 (I19 / L19)
                     ibu_1st = 10 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Standard dose(10mg/kg) 1st dose (I19):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ibu_1st:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     ibu_follow = 5 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Standard following dose(5mg/kg)2nd ,3rd doses (L19):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ibu_follow:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
-                    # 💡 依照 image_d0589f.png 新增口服換算 mL 數 (O19 / P19)
                     st.markdown("<p style='margin:4px 0 2px 0; font-size:13px; font-weight:bold; color:#64B5F6;'>🧪 口服劑型換算後體積 (ORAL):</p>", unsafe_allow_html=True)
-                    
                     ibu_1st_oral_ml = (10 * b1_bw) / 20.0
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• 1st dose ORAL 換算後mL數 (O19):</p><p style='margin:0 0 6px 0; font-size: 19px; font-weight: bold; color: #4CAF50;'>{ibu_1st_oral_ml:.2f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
-                    
                     ibu_follow_oral_ml = (5 * b1_bw) / 20.0
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• 2nd ,3rd doses ORAL 換算後mL數 (P19):</p><p style='margin:0; font-size: 19px; font-weight: bold; color: #4CAF50;'>{ibu_follow_oral_ml:.2f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
             
-            # 2. Propacetamol
             with pda_col2:
                 with st.container(border=True):
                     st.markdown("## 💊 **Propacetamol**")
                     st.markdown("---")
-                    
                     prop_dose = 30 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Standard dose(30mg/kg) (I20):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{prop_dose:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K20):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q6H</p>", unsafe_allow_html=True)
-                    st.markdown("<div style='height:114px;'></div>", unsafe_allow_html=True) # 調整墊高高度與 Ibuprofen 完美平齊
+                    st.markdown("<div style='height:114px;'></div>", unsafe_allow_html=True)
             
-            # 3. Acetaminophen
             with pda_col3:
                 with st.container(border=True):
                     st.markdown("## 🧫 **Acetaminophen**")
                     st.markdown("---")
-                    
                     ace_mg = 15 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Standard dose(15mg/kg) (I21):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{ace_mg:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     ace_ml = ace_mg / 24.0
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (N21 = I21/24):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{ace_ml:.2f} <span style='font-size:13px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
-                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (N21 = I21/24):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{ace_ml:.2f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K21):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q6H</p>", unsafe_allow_html=True)
                     st.markdown("<div style='height:28px;'></div>", unsafe_allow_html=True)
 
+    # -------------------------------------------------------------
+    # 🎯 大項 4: 肺高壓 (全面激活並對齊新視覺，對應 image_da466a.png)
+    # -------------------------------------------------------------
+    elif category == "4. 肺高壓":
+        if not has_input:
+            st.info("💡 正在等待左側輸入病患基本資料...")
+        else:
+            ph_col1, ph_col2, ph_col3 = st.columns(3)
+            
+            # 1. Sildenafil
+            with ph_col1:
+                with st.container(border=True):
+                    st.markdown("## 🟥 **Sildenafil**")
+                    st.markdown("---")
+                    
+                    sil_dose = 0.5 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose(Range:0.5-2mg/kg) (0.5mg/kg) (I24):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sil_dose:.2f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K24):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q6H</p>", unsafe_allow_html=True)
+            
+            # 2. Bosentan
+            with ph_col2:
+                with st.container(border=True):
+                    st.markdown("## 🟦 **Bosentan**")
+                    st.markdown("---")
+                    
+                    bos_dose = 1.0 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose (I25):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{bos_dose:.2f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K25):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+            
+            # 3. Iloprost
+            with ph_col3:
+                with st.container(border=True):
+                    st.markdown("## 🟩 **Iloprost**")
+                    st.markdown("---")
+                    
+                    ilo_dose = 0.5 * b1_bw
+                    # 💡 依照 image_da466a.png 精準切換單位為 mcg/dose
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose(Range:0.5-2mcg/kg) (0.5mcg/kg) (I26):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #64B5F6;'>{ilo_dose:.2f} <span style='font-size:13px; color:#ff8a80; font-weight:bold;'>mcg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K26):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q4H</p>", unsafe_allow_html=True)
+
     # 其餘大項暫留
-    elif category == "4. 肺高壓": st.info("💡 肺高壓藥物公式建構中...")
     elif category == "5. Apnea": st.info("💡 呼吸暫停/咖啡因模組建構中...")
     elif category == "6. Seizure control": st.info("💡 抗癲癇藥物公式建構中...")
     elif category == "7. Sedation": st.info("💡 鎮靜止痛藥物模組建構中...")
