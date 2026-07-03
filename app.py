@@ -13,11 +13,10 @@ st.caption("🔒 兒科/新生兒加護病房專用 | 臨床決策支援系統 (
 st.write("---")
 
 # --- 側邊欄：統一輸入基本資料 (對應 Excel 儲存格位置) ---
-st.sidebar.header("📥 病幕基本資料輸入")
+st.sidebar.header("📥 病患基本資料輸入")
 
 # B1: 體重
-st.sidebar.markdown("**BW 體重 (B1)**")
-b1_bw = st.sidebar.number_input("請輸入體重 (kg)", min_value=0.0, max_value=10.0, value=3.0, step=0.1)
+b1_bw = st.sidebar.number_input("BW 體重 (B1) (kg)", min_value=0.0, max_value=10.0, value=3.0, step=0.1)
 
 st.sidebar.write("---")
 st.sidebar.markdown("**GA 胎齡 (F1 + H1)**")
@@ -28,11 +27,17 @@ h1_ga_day = st.sidebar.number_input("GA 天數 (H1)", min_value=0, max_value=6, 
 
 st.sidebar.write("---")
 # L1: PNA出生天數
-st.sidebar.markdown("**PNA 出生天數 (L1)**")
-l1_pna = st.sidebar.number_input("請輸入出生天數 (days)", min_value=0, max_value=365, value=1, step=1)
+l1_pna = st.sidebar.number_input("PNA 出生天數 (L1) (days)", min_value=0, max_value=365, value=1, step=1)
 
 
-# --- 💡 關鍵改造：從 st.sidebar.selectbox 改為 st.sidebar.radio（全展開點選清單） ---
+# --- 💡 調整位置：將後台邏輯計算移至最上方，確保變數先行定義 ---
+ga_total_days = (f1_ga_wk * 7) + h1_ga_day
+pma_total_days = ga_total_days + l1_pna
+q1_pma_wk = pma_total_days // 7
+s1_pma_day = pma_total_days % 7
+
+
+# --- 📌 側邊欄：常用藥物類別選單 (全展開點選清單) ---
 st.sidebar.write("---")
 st.sidebar.header("📁 藥物類別選擇")
 
@@ -47,7 +52,7 @@ category = st.sidebar.radio(
         "6. Seizure control",
         "7. Sedation",
         "8. Miscellaneous.GCSF",
-        "9. 胃腸類藥品/營養補充品/維他命/其它"
+        "9. 胃腸類藥品/營養補充品/維命/其它"
     ]
 )
 
@@ -60,6 +65,7 @@ with col1:
 with col2:
     st.metric(label="⏳ 胎齡 (GA)", value=f"{f1_ga_wk} 週 + {h1_ga_day} 天")
 with col3:
+    # 這裡就能完美抓取到 q1_pma_wk 與 s1_pma_day 了！
     st.success(f"🧮 **PMA (受孕齡) [Q1+S1]**：\n### {q1_pma_wk} 週 + {s1_pma_day} 天")
 
 st.write("---")
@@ -127,7 +133,6 @@ with tab1:
                         b5_dose = b1_bw * 100
                         d5_freq = "Q8H"
                     else:
-                        b5_dose = "超過7天(請確認公式)"
                         b5_dose = b1_bw * 75
                         d5_freq = "Q6H"
                     st.markdown(f"<p style='font-size: 24px; font-weight: bold; margin-bottom:0px; color: #1E88E5;'>{b5_dose:.1f} mg/dose <span style='font-size: 20px; color: #F4511E; margin-left: 15px;'>{d5_freq}</span></p>", unsafe_allow_html=True)
