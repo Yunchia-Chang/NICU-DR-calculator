@@ -468,7 +468,7 @@ with tab1:
             with ap_col6: st.write("")
 
     # -------------------------------------------------------------
-    # 大項 6: Seizure control (💡 已更新：依照 image_db32e4.png 整合兩大藥物)
+    # 大項 6: Seizure control
     # -------------------------------------------------------------
     elif category == "6. Seizure control":
         if not has_input:
@@ -476,7 +476,7 @@ with tab1:
         else:
             sz_col1, sz_col2, sz_col3 = st.columns(3)
             
-            # 1. Phenobarbital (新成員)
+            # 1. Phenobarbital
             with sz_col1:
                 with st.container(border=True):
                     st.markdown("## 🟥 **Phenobarbital**")
@@ -489,9 +489,9 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) (S5):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{pb_maint:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U5):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
-                    st.markdown("<div style='height:40px;'></div>", unsafe_allow_html=True) # 調整高度與 Levetiracetam 平齊
+                    st.markdown("<div style='height:40px;'></div>", unsafe_allow_html=True)
             
-            # 2. Levetiracetam
+            # 2. Levetiracetam (💡 已修正：依照 image_db490b.png 調整顯示順序)
             with sz_col2:
                 with st.container(border=True):
                     st.markdown("## 🟦 **Levetiracetam**")
@@ -503,10 +503,12 @@ with tab1:
                     sz_maint = 10.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) (S8):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sz_maint:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U8):</p><p style='margin:0 0 8px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
-                    
+                    # 順序調整：換算後mL數提到 Frequency 上方
                     sz_ml = sz_maint / 100.0
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (Y8 = S8/100):</p><p style='margin:0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{sz_ml:.2f} <span style='font-size:13px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (Y8 = S8/100):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{sz_ml:.2f} <span style='font-size:13px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    
+                    # 順序調整：Frequency 移到最下方
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U8):</p><p style='margin:0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
                     
             with sz_col3: 
                 st.write("")
@@ -528,7 +530,7 @@ st.markdown(
     """
     <div style='text-align: center; color: #888888; font-size: 12px; line-height: 1.6;'>
         🔒 <b>臨床決策支援系統 (CDSS) 免責宣告</b>：本工具計算結果僅供醫療專業人員參考核對，處方開立仍應以臨床實際病情與主治醫師之最終判斷為準。<br>
-        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務組 張運佳藥師 所有</b>
+        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務组 張運佳藥師 所有</b>
     </div>
     """, 
     unsafe_allow_html=True
