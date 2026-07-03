@@ -231,7 +231,7 @@ with tab1:
                 with st.container(border=True):
                     st.markdown("### 🛸 **Meropenem**")
                     mrp_b23 = b1_bw * 20 if ga_total_days <= 223 else (b1_bw * 20 if l1_pna < 14 else b1_bw * 30)
-                    mrp_d23 = "Q12H" if (ga_total_days <= 223 and l1_pna < 14) else "Q8H"
+                    mrp_d23 = "Q12H" if (ga_total_days <= 223 wildlife l1_pna < 14) else "Q8H"
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Normal dose:</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mrp_b23:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> <span style='font-size: 16px; color: #F4511E; margin-left: 8px;'>{mrp_d23}</span></p>", unsafe_allow_html=True)
                     mrp_b24_ok = True
                     if l1_pna <= 60:
@@ -475,46 +475,56 @@ with tab1:
             st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             sz_col1, sz_col2, sz_col3 = st.columns(3)
-            
-            # 1. Phenobarbital
             with sz_col1:
                 with st.container(border=True):
                     st.markdown("## 🟥 **Phenobarbital**")
                     st.markdown("---")
-                    
                     pb_load = 15.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose(IV) (15mg/kg/day) (S4):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{pb_load:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     pb_maint = 3.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) (S5):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{pb_maint:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U5):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
                     st.markdown("<div style='height:40px;'></div>", unsafe_allow_html=True)
             
-            # 2. Levetiracetam (💡 已修正：依照 image_db490b.png 調整顯示順序)
             with sz_col2:
                 with st.container(border=True):
                     st.markdown("## 🟦 **Levetiracetam**")
                     st.markdown("---")
-                    
                     sz_load = 20.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (S7):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sz_load:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     sz_maint = 10.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) (S8):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sz_maint:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
-                    # 順序調整：換算後mL數提到 Frequency 上方
                     sz_ml = sz_maint / 100.0
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (Y8 = S8/100):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{sz_ml:.2f} <span style='font-size:13px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
-                    
-                    # 順序調整：Frequency 移到最下方
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U8):</p><p style='margin:0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
-                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U8):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             with sz_col3: 
                 st.write("")
 
+    # -------------------------------------------------------------
+    # 🎯 大項 7: Sedation (全面激活，對應 image_dbb245.png 表格邏輯)
+    # -------------------------------------------------------------
+    elif category == "7. Sedation":
+        if not has_input:
+            st.info("💡 正在等待左側輸入病患基本資料...")
+        else:
+            sd_col1, sd_col2, sd_col3 = st.columns(3)
+            
+            # 1. Chloral hydrate 10%
+            with sd_col1:
+                with st.container(border=True):
+                    st.markdown("## 🟥 **Chloral hydrate 10%**")
+                    st.markdown("---")
+                    
+                    sd_dose_mg = 25.0 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose(25mg/kg) (S10):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sd_dose_mg:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    sd_dose_ml = sd_dose_mg / 100.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (V10 = S10/100):</p><p style='margin:0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{sd_dose_ml:.2f} <span style='font-size:13px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    
+            with sd_col2: st.write("")
+            with sd_col3: st.write("")
+
     # 其餘大項暫留
-    elif category == "7. Sedation": st.info("💡 鎮靜止痛藥物模組建構中...")
     elif category == "8. Miscellaneous.GCSF": st.info("💡 GCSF 特殊藥物公式建構中...")
     elif category == "9. 胃腸類藥品/營養補充品/維他命/其它": st.info("💡 胃腸營養模組建構中...")
 
@@ -530,7 +540,7 @@ st.markdown(
     """
     <div style='text-align: center; color: #888888; font-size: 12px; line-height: 1.6;'>
         🔒 <b>臨床決策支援系統 (CDSS) 免責宣告</b>：本工具計算結果僅供醫療專業人員參考核對，處方開立仍應以臨床實際病情與主治醫師之最終判斷為準。<br>
-        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務组 張運佳藥師 所有</b>
+        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務組 張運佳藥師 所有</b>
     </div>
     """, 
     unsafe_allow_html=True
