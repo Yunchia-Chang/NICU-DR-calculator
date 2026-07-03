@@ -96,71 +96,68 @@ with tab1:
         if b1_bw <= 0:
             st.warning("⚠️ 請先於左側欄位輸入大於 0 的「體重 (BW)」，系統將自動計算建議劑量。")
         else:
-            # 切分出三個水平大欄位 (藥物並排)
+            # 切分出三個水平欄位
             drug_col1, drug_col2, drug_col3 = st.columns(3)
             
-            # --- 【第一欄：AMPICILLIN (三大療程全展開)】 ---
+            # --- 【第一欄：AMPICILLIN】 ---
             with drug_col1:
                 with st.container(border=True):
-                    st.markdown("## 🟥 **AMPICILLIN**")
+                    st.markdown("### 🟥 **AMPICILLIN**")
+                    st.caption("Normal 療程建議")
                     st.markdown("---")
                     
-                    # 1️⃣ 療程一：Normal 邏輯計算
-                    st.markdown("💡 **1. Normal 一般療程**")
+                    # Ampicillin 邏輯計算
                     if ga_total_days <= 244:
                         b4_dose = b1_bw * 50 if l1_pna <= 7 else b1_bw * 75
                         d4_freq = "Q12H"
-                        is_normal_valid = True
+                        is_valid = True
                     else:
                         if l1_pna <= 28:
                             b4_dose = b1_bw * 50
                             d4_freq = "Q8H"
-                            is_normal_valid = True
+                            is_valid = True
                         else:
                             b4_dose = "超過28天(請手動確認)"
                             d4_freq = "Q8H"
-                            is_normal_valid = False
+                            is_valid = False
                     
-                    if is_normal_valid:
-                        st.markdown(f"<p style='font-size: 24px; font-weight: bold; margin-bottom:0px; color: #1E88E5;'>{b4_dose:.1f} mg/dose <span style='font-size: 20px; color: #F4511E; margin-left: 15px;'>{d4_freq}</span></p>", unsafe_allow_html=True)
+                    if is_valid:
+                        # 💡 放大字體改造：使用 HTML/CSS 讓劑量數字非常顯眼
+                        st.markdown("📋 **單次劑量：**")
+                        st.markdown(f"<p style='font-size: 32px; font-weight: bold; color: #1E88E5; margin-bottom: 0px;'>{b4_dose:.1f} mg</p>", unsafe_allow_html=True)
+                        
+                        st.markdown("⏱️ **給藥頻次：**")
+                        st.markdown(f"<p style='font-size: 28px; font-weight: bold; color: #F4511E; margin-top: 0px;'>{d4_freq}</p>", unsafe_allow_html=True)
                     else:
-                        st.error(f"❌ {b4_dose}")
-                    st.markdown("---")
-                    
-                    # 2️⃣ 療程二：Meningitis 邏輯計算
-                    st.markdown("💡 **2. Meningitis 腦膜炎療程**")
-                    if l1_pna <= 7:
-                        b5_dose = b1_bw * 100
-                        d5_freq = "Q8H"
-                    else:
-                        b5_dose = b1_bw * 75
-                        d5_freq = "Q6H"
-                    st.markdown(f"<p style='font-size: 24px; font-weight: bold; margin-bottom:0px; color: #1E88E5;'>{b5_dose:.1f} mg/dose <span style='font-size: 20px; color: #F4511E; margin-left: 15px;'>{d5_freq}</span></p>", unsafe_allow_html=True)
-                    st.markdown("---")
-                    
-                    # 3️⃣ 療程三：Surgical prophylaxis 邏輯計算
-                    st.markdown("💡 **3. Surgical prophylaxis 手術預防**")
-                    b6_dose = b1_bw * 50
-                    d6_freq = "60 mins prior"
-                    st.markdown(f"<p style='font-size: 24px; font-weight: bold; margin-bottom:0px; color: #1E88E5;'>{b6_dose:.1f} mg/dose <span style='font-size: 18px; color: #F4511E; margin-left: 15px;'>{d6_freq}</span></p>", unsafe_allow_html=True)
+                        st.error(f"❌ 警示：{b4_dose}")
             
-            # --- 【第二欄：GENTAMICIN 模擬大字】 ---
+            # --- 【第二欄：藥物 B (GENTAMICIN 模擬大字)】 ---
             with drug_col2:
                 with st.container(border=True):
-                    st.markdown("## 🟦 **GENTAMICIN**")
+                    st.markdown("### 🟦 **GENTAMICIN**")
+                    st.caption("範例模擬藥物")
                     st.markdown("---")
-                    st.caption("範例模擬藥物位置")
+                    
                     g_dose = b1_bw * 4 / 2
-                    st.markdown(f"<p style='font-size: 24px; font-weight: bold; color: #1E88E5;'>{g_dose:.1f} mg/dose <span style='font-size: 20px; color: #F4511E; margin-left: 15px;'>Q24H</span></p>", unsafe_allow_html=True)
+                    st.markdown("📋 **單次劑量：**")
+                    st.markdown(f"<p style='font-size: 32px; font-weight: bold; color: #1E88E5; margin-bottom: 0px;'>{g_dose:.1f} mg</p>", unsafe_allow_html=True)
+                    
+                    st.markdown("⏱️ **給藥頻次：**")
+                    st.markdown("<p style='font-size: 28px; font-weight: bold; color: #F4511E; margin-top: 0px;'>Q24H</p>", unsafe_allow_html=True)
             
-            # --- 【第三欄：CEFTAZIDIME 模擬大字】 ---
+            # --- 【第三欄：藥物 C (CEFTAZIDIME 模擬大字)】 ---
             with drug_col3:
                 with st.container(border=True):
-                    st.markdown("## 🟩 **CEFTAZIDIME**")
+                    st.markdown("### 🟩 **CEFTAZIDIME**")
+                    st.caption("範例模擬藥物")
                     st.markdown("---")
-                    st.caption("範例模擬藥物位置")
+                    
                     c_dose = b1_bw * 50
-                    st.markdown(f"<p style='font-size: 24px; font-weight: bold; color: #1E88E5;'>{c_dose:.1f} mg/dose <span style='font-size: 20px; color: #F4511E; margin-left: 15px;'>Q12H</span></p>", unsafe_allow_html=True)
+                    st.markdown("📋 **單次劑量：**")
+                    st.markdown(f"<p style='font-size: 32px; font-weight: bold; color: #1E88E5; margin-bottom: 0px;'>{c_dose:.1f} mg</p>", unsafe_allow_html=True)
+                    
+                    st.markdown("⏱️ **給藥頻次：**")
+                    st.markdown("<p style='font-size: 28px; font-weight: bold; color: #F4511E; margin-top: 0px;'>Q12H</p>", unsafe_allow_html=True)
 
     # -------------------------------------------------------------
     # 大項 2 ~ 9
