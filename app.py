@@ -45,7 +45,7 @@ pma_total_days = ga_total_days + l1_pna
 q1_pma_wk = pma_total_days // 7
 s1_pma_day = pma_total_days % 7
 
-# 側邊欄：常用藥物大項（💡 已修正：5. Apnea/RDS Surfactant 改名）
+# 側邊欄：常用藥物大項
 st.sidebar.write("---")
 st.sidebar.header("📁 藥物類別選擇")
 category = st.sidebar.radio(
@@ -415,16 +415,13 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K26):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q4H</p>", unsafe_allow_html=True)
 
     # -------------------------------------------------------------
-    # 🎯 大項 5: Apnea/RDS Surfactant (包含新增 Poractant alfa)
+    # 大項 5: Apnea/RDS Surfactant
     # -------------------------------------------------------------
     elif category == "5. Apnea/RDS Surfactant":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
         else:
-            # 排列一：原有的呼吸暫停三聯軍
             ap_col1, ap_col2, ap_col3 = st.columns(3)
-            
-            # 1. Aminophylline
             with ap_col1:
                 with st.container(border=True):
                     st.markdown("## 🟥 **Aminophylline**")
@@ -435,7 +432,6 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose (L29):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ap_maint:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose frequency (N29):</p><p style='margin:0 0 2px 0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             
-            # 2. Theophylline
             with ap_col2:
                 with st.container(border=True):
                     st.markdown("## 🟦 **Theophylline**")
@@ -448,7 +444,6 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose (L30 / P30):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{theo_maint_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;|&nbsp; <span style='color:#4CAF50;'>{theo_maint_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose frequency (N30):</p><p style='margin:0 0 2px 0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             
-            # 3. Caffeine citrate
             with ap_col3:
                 with st.container(border=True):
                     st.markdown("## 🟩 **Caffeine citrate**")
@@ -459,26 +454,64 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose(10 mg/kg) (L31):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{caf_maint:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
 
-            # 排列二：💡 依照 image_dac90c.png 新增之表面張力素
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             ap_col4, ap_col5, ap_col6 = st.columns(3)
-            
             with ap_col4:
                 with st.container(border=True):
                     st.markdown("## 🫁 **Poractant alfa: ET**")
                     st.markdown("---")
-                    
                     pnt_mg = 200.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose (I34):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{pnt_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     pnt_ml = 2.5 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (L34):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{pnt_ml:.1f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
-                    
             with ap_col5: st.write("")
             with ap_col6: st.write("")
 
+    # -------------------------------------------------------------
+    # 大項 6: Seizure control (💡 已更新：依照 image_db32e4.png 整合兩大藥物)
+    # -------------------------------------------------------------
+    elif category == "6. Seizure control":
+        if not has_input:
+            st.info("💡 正在等待左側輸入病患基本資料...")
+        else:
+            sz_col1, sz_col2, sz_col3 = st.columns(3)
+            
+            # 1. Phenobarbital (新成員)
+            with sz_col1:
+                with st.container(border=True):
+                    st.markdown("## 🟥 **Phenobarbital**")
+                    st.markdown("---")
+                    
+                    pb_load = 15.0 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose(IV) (15mg/kg/day) (S4):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{pb_load:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    pb_maint = 3.0 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) (S5):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{pb_maint:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U5):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:40px;'></div>", unsafe_allow_html=True) # 調整高度與 Levetiracetam 平齊
+            
+            # 2. Levetiracetam
+            with sz_col2:
+                with st.container(border=True):
+                    st.markdown("## 🟦 **Levetiracetam**")
+                    st.markdown("---")
+                    
+                    sz_load = 20.0 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (S7):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sz_load:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    sz_maint = 10.0 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) (S8):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sz_maint:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U8):</p><p style='margin:0 0 8px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+                    
+                    sz_ml = sz_maint / 100.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後mL數 (Y8 = S8/100):</p><p style='margin:0; font-size: 21px; font-weight: bold; color: #4CAF50;'>{sz_ml:.2f} <span style='font-size:13px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    
+            with sz_col3: 
+                st.write("")
+
     # 其餘大項暫留
-    elif category == "6. Seizure control": st.info("💡 抗癲癇藥物公式建構中...")
     elif category == "7. Sedation": st.info("💡 鎮靜止痛藥物模組建構中...")
     elif category == "8. Miscellaneous.GCSF": st.info("💡 GCSF 特殊藥物公式建構中...")
     elif category == "9. 胃腸類藥品/營養補充品/維他命/其它": st.info("💡 胃腸營養模組建構中...")
