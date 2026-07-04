@@ -328,11 +328,9 @@ with tab1:
                     tcm_dose = 0.04 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Initial dose(Range:0.04-1.6mg/kg/day) (I14):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{tcm_dose:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> <span style='font-size: 16px; color: #F4511E; margin-left: 8px;'>QD-Q12H</span></p>", unsafe_allow_html=True)
             
-            # 💡 已更新：依照 image_8112a4.png 更新分母與單位
             with d_r2_c2:
                 with st.container(border=True):
                     st.markdown("## 🧊 **Mannitol 20%**")
-                    
                     mnt_icp_g = 0.25 * b1_bw
                     mnt_icp_ml = mnt_icp_g / 0.2
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• ICP(0.25g/kg) / 換算後mL數 (I16/L16):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mnt_icp_g:.2f} <span style='font-size:12px; color:#fff;'>g/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{mnt_icp_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
@@ -353,7 +351,7 @@ with tab1:
             pda_col1, pda_col2, pda_col3 = st.columns(3)
             with pda_col1:
                 with st.container(border=True):
-                    st.markdown("## ## **Ibuprofen (Standard)**")
+                    st.markdown("## 🧬 **Ibuprofen (Standard)**")
                     st.markdown("---")
                     ibu_1st = 10 * b1_bw
                     ibu_1st_oral_ml = ibu_1st / 20.0
@@ -564,6 +562,7 @@ with tab1:
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
         else:
+            # --- ROW 1: Famotidine / Pantoprazole / Esomeprazole ---
             g_r1_c1, g_r1_c2, g_r1_c3 = st.columns(3)
             with g_r1_c1:
                 with st.container(border=True):
@@ -584,11 +583,13 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage (0.5mg/kg/dose) (S19):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{eso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U19):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
 
+            # --- ROW 2: Lansoprazole / Domperidone / Mosapride ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r2_c1, g_r2_c2, g_r2_c3 = st.columns(3)
             with g_r2_c1:
                 with st.container(border=True):
-                    st.markdown("## 橫 **Lansoprazole(PO)**")
+                    # 💡 已修正：把之前的打字錯誤中文字「橫」修正回官方指定圖示 🟧（對應 image_811da9.png）
+                    st.markdown("## 🟧 **Lansoprazole(PO)**")
                     lanso = 0.5 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Initail dose (Range 0.5-1.5mg/kg/dose) (S20):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{lanso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U20):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
@@ -606,6 +607,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(0.3mg/kg/day) (S22):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mosa:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U22):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
 
+            # --- ROW 3: Metoclopramide / Dioctahedral Smectite / Racecadotril ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r3_c1, g_r3_c2, g_r3_c3 = st.columns(3)
             with g_r3_c1:
@@ -628,6 +630,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(1.5 mg/kg/dose) (S25):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{race:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U25):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
 
+            # --- ROW 4: Calcitriol / Sideral GOCCE P / Ursodeoxycholic acid ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r4_c1, g_r4_c2, g_r4_c3 = st.columns(3)
             with g_r4_c1:
@@ -651,6 +654,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage (S28):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{urso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U28):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
 
+            # --- ROW 5: Silymarin / Tranexamic Acid(IV) / Diazoxide(PO) ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r5_c1, g_r5_c2, g_r5_c3 = st.columns(3)
             with g_r5_c1:
@@ -672,6 +676,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(10 mg/kg/day) (S31):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{diaz:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U31):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
 
+            # --- ROW 6: Levothyroxine / Propranolol / Piracetam ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r6_c1, g_r6_c2, g_r6_c3 = st.columns(3)
             with g_r6_c1:
