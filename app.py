@@ -28,7 +28,7 @@ with col_sub:
 st.write("---")
 
 # --- 側邊欄：基本資料輸入 ---
-st.sidebar.header("📥 病患基本資料輸入")
+st.sidebar.header("📥 病健基本資料輸入")
 b1_bw = st.sidebar.number_input("BW 體重 (B1) (kg)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
 
 st.sidebar.write("---")
@@ -231,7 +231,6 @@ with tab1:
                 with st.container(border=True):
                     st.markdown("## 🛸 **Meropenem**")
                     mrp_b23 = b1_bw * 20 if ga_total_days <= 223 else (b1_bw * 20 if l1_pna < 14 else b1_bw * 30)
-                    # 💡 已修正：將手誤打錯的 wildlife 修正為 Python 正確語法 and
                     mrp_d23 = "Q12H" if (ga_total_days <= 223 and l1_pna < 14) else "Q8H"
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Normal dose:</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mrp_b23:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> <span style='font-size: 16px; color: #F4511E; margin-left: 8px;'>{mrp_d23}</span></p>", unsafe_allow_html=True)
                     mrp_b24_ok = True
@@ -281,9 +280,9 @@ with tab1:
             with r4_c3:
                 st.write("")
 
-    # -------------------------------------------------------------
-    # 大項 2: Diuretics
-    # -------------------------------------------------------------
+# -------------------------------------------------------------
+# 大項 2: Diuretics
+# -------------------------------------------------------------
     elif category == "2. Diuretics":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
@@ -341,9 +340,9 @@ with tab1:
             with d_r2_c3:
                 st.write("")
 
-    # -------------------------------------------------------------
-    # 大項 3: PDA
-    # -------------------------------------------------------------
+# -------------------------------------------------------------
+# 大項 3: PDA
+# -------------------------------------------------------------
     elif category == "3. PDA":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
@@ -383,9 +382,9 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K21):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q6H</p>", unsafe_allow_html=True)
                     st.markdown("<div style='height:28px;'></div>", unsafe_allow_html=True)
 
-    # -------------------------------------------------------------
-    # 大項 4: 肺高壓
-    # -------------------------------------------------------------
+# -------------------------------------------------------------
+# 大項 4: 肺高壓
+# -------------------------------------------------------------
     elif category == "4. 肺高壓":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
@@ -415,9 +414,9 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose(Range:0.5-2mcg/kg) (0.5mcg/kg) (I26):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #64B5F6;'>{ilo_dose:.2f} <span style='font-size:13px; color:#ff8a80; font-weight:bold;'>mcg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K26):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q4H</p>", unsafe_allow_html=True)
 
-    # -------------------------------------------------------------
-    # 大項 5: Apnea/RDS Surfactant
-    # -------------------------------------------------------------
+# -------------------------------------------------------------
+# 大項 5: Apnea/RDS Surfactant
+# -------------------------------------------------------------
     elif category == "5. Apnea/RDS Surfactant":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
@@ -452,7 +451,7 @@ with tab1:
                     caf_load = 20.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose(20 mg/kg) (I31):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{caf_load:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     caf_maint = 10.0 * b1_bw
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose(10 mg/kg) (L31):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{caf_maint:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose(10 mg/kg) (L31):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{caf_maint:.2f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
 
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
@@ -468,9 +467,9 @@ with tab1:
             with ap_col5: st.write("")
             with ap_col6: st.write("")
 
-    # -------------------------------------------------------------
-    # 大項 6: Seizure control
-    # -------------------------------------------------------------
+# -------------------------------------------------------------
+# 大項 6: Seizure control
+# -------------------------------------------------------------
     elif category == "6. Seizure control":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
@@ -501,9 +500,9 @@ with tab1:
             with sz_col3: 
                 st.write("")
 
-    # -------------------------------------------------------------
-    # 大項 7: Sedation
-    # -------------------------------------------------------------
+# -------------------------------------------------------------
+# 大項 7: Sedation
+# -------------------------------------------------------------
     elif category == "7. Sedation":
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
@@ -520,13 +519,208 @@ with tab1:
             with sd_col2: st.write("")
             with sd_col3: st.write("")
 
-    # 其餘大項暫留
-    elif category == "8. Miscellaneous.GCSF": st.info("💡 GCSF 特殊藥物公式建構中...")
-    elif category == "9. 胃腸類藥品/營養補充品/維他命/其它": st.info("💡 胃腸營養模組建構中...")
+# -------------------------------------------------------------
+# 大項 8: Miscellaneous.GCSF
+# -------------------------------------------------------------
+    elif category == "8. Miscellaneous.GCSF":
+        if not has_input:
+            st.info("💡 正在等待左側輸入病患基本資料...")
+        else:
+            m_col1, m_col2, m_col3 = st.columns(3)
+            with m_col1:
+                with st.container(border=True):
+                    st.markdown("## 🟥 **Albumin**")
+                    st.markdown("---")
+                    alb_dose = b1_bw * 1.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Normal dose (1g/kg) (S12):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #64B5F6;'>{alb_dose:.2f} <span style='font-size:13px; color:#ff8a80; font-weight:bold;'>g/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U12):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:40px;'></div>", unsafe_allow_html=True)
+            
+            with m_col2:
+                with st.container(border=True):
+                    st.markdown("## 🟦 **Eptacog alfa(Factor 7)**")
+                    st.markdown("---")
+                    ept_dose = b1_bw * 50.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Preterm pulmonary hemorrhage (50mcg/kg/dose) (S13):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{ept_dose:.1f} <span style='font-size:13px; color:#fff;'>mcg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U13):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q2-6H</p>", unsafe_allow_html=True)
+            
+            with m_col3:
+                with st.container(border=True):
+                    st.markdown("## 🟩 **Beriplex P/N**")
+                    st.markdown("---")
+                    ber_dose = b1_bw * 30.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Initial dosage(30 IU/kg) (S14):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{ber_dose:.1f} <span style='font-size:13px; color:#fff;'>IU</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U14):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q4H</p>", unsafe_allow_html=True)
+            
+            st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+            m_col4, m_col5, m_col6 = st.columns(3)
+            with m_col4:
+                with st.container(border=True):
+                    st.markdown("## 🧪 **Filgrastim**")
+                    st.markdown("---")
+                    fil_dose = b1_bw * 10.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Neutropenia with sepsis(10mcg/kg/dose) (S15):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{fil_dose:.1f} <span style='font-size:13px; color:#fff;'>mcg</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U15):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+            with m_col5: st.write("")
+            with m_col6: st.write("")
+
+    # -------------------------------------------------------------
+    # 🎯 大項 9: 胃腸類藥品/營養補充品/維他命/其它 (全面大對接！)
+    # -------------------------------------------------------------
+    elif category == "9. 胃腸類藥品/營養補充品/維他命/其它":
+        if not has_input:
+            st.info("💡 正在等待左側輸入病患基本資料...")
+        else:
+            # --- ROW 1: Famotidine / Pantoprazole / Esomeprazole ---
+            g_r1_c1, g_r1_c2, g_r1_c3 = st.columns(3)
+            with g_r1_c1:
+                with st.container(border=True):
+                    st.markdown("## 🟥 **Famotidine(PO.IV)**")
+                    famo = 0.25 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(0.25mg/kg/dose) (S17):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{famo:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U17):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD-Q12H</p>", unsafe_allow_html=True)
+            with g_r1_c2:
+                with st.container(border=True):
+                    st.markdown("## 🟦 **Pantoprazole(IV)**")
+                    panto = 0.6 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Initail dose (Range 0.6-1.2mg/kg/day) (S18):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{panto:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U18):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+            with g_r1_c3:
+                with st.container(border=True):
+                    st.markdown("## 🟩 **Esomeprazole(PO)**")
+                    eso = 0.5 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage (0.5mg/kg/dose) (S19):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{eso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U19):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+
+            # --- ROW 2: Lansoprazole / Domperidone / Mosapride ---
+            st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+            g_r2_c1, g_r2_c2, g_r2_c3 = st.columns(3)
+            with g_r2_c1:
+                with st.container(border=True):
+                    st.markdown("## 🟧 **Lansoprazole(PO)**")
+                    lanso = 0.5 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Initail dose (Range 0.5-1.5mg/kg/dose) (S20):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{lanso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U20):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+            with g_r2_c2:
+                with st.container(border=True):
+                    st.markdown("## 🟪 **Domperidone (PO)**")
+                    domp_mg = 0.25 * b1_bw
+                    domp_ml = domp_mg / 1.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(0.25mg/kg/dose) (S21):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{domp_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• 換算後mL數 (Y21 = S21/1):</p><p style='margin:0 0 6px 0; font-size: 18px; font-weight: bold; color: #4CAF50;'>{domp_ml:.2f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U21):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
+            with g_r2_c3:
+                with st.container(border=True):
+                    st.markdown("## 🟫 **Mosapride(PO)**")
+                    mosa = 0.1 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(0.3mg/kg/day) (S22):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mosa:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U22):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
+
+            # --- ROW 3: Metoclopramide / Dioctahedral Smectite / Racecadotril ---
+            st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+            g_r3_c1, g_r3_c2, g_r3_c3 = st.columns(3)
+            with g_r3_c1:
+                with st.container(border=True):
+                    st.markdown("## 🧪 **Metoclopramide**")
+                    meto = 0.1 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(0.1 mg/kg/dose) (S23):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{meto:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U23):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
+            with g_r3_c2:
+                with st.container(border=True):
+                    st.markdown("## 🪵 **Dioctahedral Smectite**")
+                    smec_g = 1.5
+                    smec_pac = smec_g / 3.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage (S24):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #64B5F6;'>{smec_g:.1f} <span style='font-size:12px; color:#ff8a80; font-weight:bold;'>g/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• 換算後包數 (Y24 = S24/3):</p><p style='margin:0 0 6px 0; font-size: 18px; font-weight: bold; color: #4CAF50;'>{smec_pac:.2f} <span style='font-size:12px; color:#fff;'>pac/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U24):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+            with g_r3_c3:
+                with st.container(border=True):
+                    st.markdown("## 🪶 **Racecadotril**")
+                    race = 1.5 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(1.5 mg/kg/dose) (S25):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{race:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U25):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
+
+            # --- ROW 4: Calcitriol / Sideral GOCCE P / Ursodeoxycholic acid ---
+            st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+            g_r4_c1, g_r4_c2, g_r4_c3 = st.columns(3)
+            with g_r4_c1:
+                with st.container(border=True):
+                    st.markdown("## ☀️ **Calcitriol**")
+                    calc_mcg = 0.1 * b1_bw
+                    calc_ml = (calc_mcg * 0.32) / 0.5
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(0.1mcg/kg/dose) (S26):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #64B5F6;'>{calc_mcg:.2f} <span style='font-size:12px; color:#ff8a80; font-weight:bold;'>mcg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• 換算後mL數 (Y26 = S26*0.32/0.5):</p><p style='margin:0 0 6px 0; font-size: 18px; font-weight: bold; color: #4CAF50;'>{calc_ml:.3f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U26):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+            with g_r4_c2:
+                with st.container(border=True):
+                    st.markdown("## 🛡️ **Sideral GOCCE P**")
+                    sid_ml = b1_bw * 0.2
+                    sid_mg = sid_ml * 7.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(1.4mg/kg/day) (S27):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sid_ml:.2f} <span style='font-size:12px; color:#fff;'>mL/day</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• 換算後mg數 (W27 = S27*7):</p><p style='margin:0 0 6px 0; font-size: 18px; font-weight: bold; color: #4CAF50;'>{sid_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U27):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+            with g_r4_c3:
+                with st.container(border=True):
+                    st.markdown("## 🐻 **Ursodeoxycholic acid**")
+                    urso = 10 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(Range 10-30mg/kg/day)>30mg/kg/day dose (S28):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{urso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U28):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
+
+            # --- ROW 5: Silymarin / Tranexamic Acid(IV) / Diazoxide(PO) ---
+            st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+            g_r5_c1, g_r5_c2, g_r5_c3 = st.columns(3)
+            with g_r5_c1:
+                with st.container(border=True):
+                    st.markdown("## 🌿 **Silymarin**")
+                    sily = 3.75 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(Range 3.75-4mg/kg/dose) (S29):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sily:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U29):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+            with g_r5_c2:
+                with st.container(border=True):
+                    st.markdown("## 🩸 **Tranexamic Acid(IV)**")
+                    tran = 10 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(10 mg/kg/dose) (S30):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{tran:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U30):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
+            with g_r5_c3:
+                with st.container(border=True):
+                    st.markdown("## 💊 **Diazoxide(PO)**")
+                    diaz = 5 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(10 mg/kg/day) (S31):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{diaz:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U31):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+
+            # --- ROW 6: Levothyroxine / Propranolol / Piracetam ---
+            st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+            g_r6_c1, g_r6_c2, g_r6_c3 = st.columns(3)
+            with g_r6_c1:
+                with st.container(border=True):
+                    st.markdown("## 🦋 **Levothyroxine**")
+                    levo = 10 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(10 - 15 mcg/kg/dose) (S32):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #64B5F6;'>{levo:.1f} <span style='font-size:12px; color:#ff8a80; font-weight:bold;'>mcg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U32):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
+            with g_r6_c2:
+                with st.container(border=True):
+                    st.markdown("## 🍓 **Propranolol**")
+                    prop_hem = 0.25 * b1_bw
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Infantile Hemangiomas(0.5 mg/kg/day) (S33):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{prop_hem:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U33):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
+                    st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
+            with g_r6_c3:
+                with st.container(border=True):
+                    st.markdown("## 🧠 **Piracetam**")
+                    pira_mg = 20 * b1_bw
+                    pira_ml = pira_mg / 200.0
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Breath holding spell (Range40-100mg/kg/day) (S34):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{pira_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• 換算後mL數 (Y34 = S34/200):</p><p style='margin:0 0 6px 0; font-size: 18px; font-weight: bold; color: #4CAF50;'>{pira_ml:.3f} <span style='font-size:12px; color:#fff;'>mL/dose</span></p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U34):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
 
 # --- 其餘分頁 Tab 暫留 ---
 with tab2: st.info("⏳ Ion dosage 模組建構中...")
-with tab3: st.info("⏳ DART.BURST 模組建构中...")
+with tab3: st.info("⏳ DART.BURST 模組建構中...")
 with tab4: st.info("⏳ PUMP 總表115 模組建構中...")
 with tab5: st.info("⏳ Dexmedetomidine 模組建構中...")
 
