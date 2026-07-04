@@ -293,7 +293,6 @@ with tab1:
                     st.markdown("## 💧 **Furosemide**")
                     furo_po = 1.0 * b1_bw
                     furo_oral_ml = furo_po / 10.0
-                    # 💡 已修正：PO dose 與 oral dosage 透過直槓並排於同一行
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• PO dose / oral dosage(1mg/mL) (I4/N4):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{furo_po:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{furo_oral_ml:.2f} mL/dose</span> &nbsp;<span style='font-size: 16px; color: #F4511E; margin-left: 8px;'>Q12-48h</span></p>", unsafe_allow_html=True)
                     
                     furo_iv = 1.0 * b1_bw
@@ -319,7 +318,6 @@ with tab1:
                     st.markdown("<p style='margin:1px 0; font-size:13px; font-weight:bold; color:#64B5F6;'>🧪 泡製後劑量動態計算：</p>", unsafe_allow_html=True)
                     m12_input = st.number_input("自訂劑量 (mg/dose) [M12]", min_value=0.0, max_value=50.0, value=float(round(sp_bpd, 2)), step=0.1, key="m12_sp", label_visibility="collapsed")
                     m13_ml = m12_input / 5.0
-                    # 💡 已修正：M12 與 M13 採用直槓並排
                     st.markdown(f"<p style='margin:2px 0 0 0; font-size:12px; color:#ffb300;'>泡製1# in DW 5ml (5mg/mL) 稀釋後冷藏14天：</p><p style='margin:0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{m12_input:.1f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{m13_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
 
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
@@ -330,18 +328,18 @@ with tab1:
                     tcm_dose = 0.04 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Initial dose(Range:0.04-1.6mg/kg/day) (I14):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{tcm_dose:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> <span style='font-size: 16px; color: #F4511E; margin-left: 8px;'>QD-Q12H</span></p>", unsafe_allow_html=True)
             
+            # 💡 已更新：依照 image_8112a4.png 更新分母與單位
             with d_r2_c2:
                 with st.container(border=True):
                     st.markdown("## 🧊 **Mannitol 20%**")
-                    mnt_icp_mg = 0.25 * b1_bw
-                    mnt_icp_ml = (0.25 * b1_bw) / 200.0
-                    # 💡 已修正：ICP 劑量與 mL 數直槓並排
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• ICP(0.25mg/kg) (I16/L16):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mnt_icp_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{mnt_icp_ml:.4f} mL/dose</span></p>", unsafe_allow_html=True)
                     
-                    mnt_iop_mg = 1.5 * b1_bw
-                    mnt_iop_ml = (1.5 * b1_bw) / 200.0
-                    # 💡 已修正：IOP 劑量與 mL 數直槓並排
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• IOP(1.5mg/kg) (I17/L17):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mnt_iop_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{mnt_iop_ml:.4f} mL/dose</span></p>", unsafe_allow_html=True)
+                    mnt_icp_g = 0.25 * b1_bw
+                    mnt_icp_ml = mnt_icp_g / 0.2
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• ICP(0.25g/kg) / 換算後mL數 (I16/L16):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mnt_icp_g:.2f} <span style='font-size:12px; color:#fff;'>g/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{mnt_icp_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
+                    
+                    mnt_iop_g = 1.5 * b1_bw
+                    mnt_iop_ml = mnt_iop_g / 0.2
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• IOP(1.5g/kg) / 換算後mL數 (I17/L17):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mnt_iop_g:.2f} <span style='font-size:12px; color:#fff;'>g/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{mnt_iop_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
             with d_r2_c3:
                 st.write("")
 
@@ -355,17 +353,14 @@ with tab1:
             pda_col1, pda_col2, pda_col3 = st.columns(3)
             with pda_col1:
                 with st.container(border=True):
-                    st.markdown("## 🧬 **Ibuprofen (Standard)**")
+                    st.markdown("## ## **Ibuprofen (Standard)**")
                     st.markdown("---")
-                    
                     ibu_1st = 10 * b1_bw
                     ibu_1st_oral_ml = ibu_1st / 20.0
-                    # 💡 已修正：1st dose 針劑與口服 mL 數直槓並排 (對照 image_8102e5.png 進行瘦身)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 1st dose (IV / ORAL mL數) (I19/O19):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ibu_1st:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{ibu_1st_oral_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     
                     ibu_follow = 5 * b1_bw
                     ibu_follow_oral_ml = ibu_follow / 20.0
-                    # 💡 已修正：2nd, 3rd doses 針劑與口服 mL 數直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 2nd, 3rd doses (IV / ORAL mL數) (L19/P19):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ibu_follow:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{ibu_follow_oral_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
             
             with pda_col2:
@@ -382,7 +377,6 @@ with tab1:
                     st.markdown("---")
                     ace_mg = 15 * b1_bw
                     ace_ml = ace_mg / 24.0
-                    # 💡 已修正：Acetaminophen 劑量與換算後 mL 數直槓並排 (對照 image_8102e5.png 進行瘦身)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Standard dose / 換算後mL數 (I21/N21):</p><p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ace_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{ace_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (K21):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q6H</p>", unsafe_allow_html=True)
 
@@ -442,12 +436,10 @@ with tab1:
                     st.markdown("---")
                     theo_load_mg = 5.0 * b1_bw
                     theo_load_ml = (5.0 * b1_bw) / 5.34
-                    # 💡 已修正：保持與原規格一致的直槓並排 (對照 image_810361.png)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (I30 / O30):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{theo_load_mg:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{theo_load_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     
                     theo_maint_mg = 1.0 * b1_bw
                     theo_maint_ml = (1.0 * b1_bw) / 5.34
-                    # 💡 已修正：保持直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose (L30 / P30):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{theo_maint_mg:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{theo_maint_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintain dose frequency (N30):</p><p style='margin:0 0 2px 0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             
@@ -468,7 +460,6 @@ with tab1:
                     st.markdown("---")
                     pnt_mg = 200.0 * b1_bw
                     pnt_ml = 2.5 * b1_bw
-                    # 💡 已修正：Dose 與 換算後 mL 數採用直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose / 換算後mL數 (I34/L34):</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{pnt_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{pnt_ml:.1f} mL/dose</span></p>", unsafe_allow_html=True)
             with ap_col5: st.write("")
             with ap_col6: st.write("")
@@ -497,10 +488,8 @@ with tab1:
                     st.markdown("---")
                     sz_load = 20.0 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Loading dose (S7):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{sz_load:.1f} <span style='font-size:13px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                    
                     sz_maint = 10.0 * b1_bw
                     sz_ml = sz_maint / 100.0
-                    # 💡 已修正：Maintenance 劑量與換算後 mL 數採用直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) / 換算後mL數 (S8/Y8):</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sz_maint:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{sz_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency (U8):</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             with sz_col3: 
@@ -520,7 +509,6 @@ with tab1:
                     st.markdown("---")
                     sd_dose_mg = 25.0 * b1_bw
                     sd_dose_ml = sd_dose_mg / 100.0
-                    # 💡 已修正：Dose 劑量與換算後 mL 數採用直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose / 換算後mL數 (S10/V10):</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sd_dose_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{sd_dose_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
             with sd_col2: st.write("")
             with sd_col3: st.write("")
@@ -576,7 +564,6 @@ with tab1:
         if not has_input:
             st.info("💡 正在等待左側輸入病患基本資料...")
         else:
-            # --- ROW 1: Famotidine / Pantoprazole / Esomeprazole ---
             g_r1_c1, g_r1_c2, g_r1_c3 = st.columns(3)
             with g_r1_c1:
                 with st.container(border=True):
@@ -597,7 +584,6 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage (0.5mg/kg/dose) (S19):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{eso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U19):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
 
-            # --- ROW 2: Lansoprazole / Domperidone / Mosapride ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r2_c1, g_r2_c2, g_r2_c3 = st.columns(3)
             with g_r2_c1:
@@ -611,7 +597,6 @@ with tab1:
                     st.markdown("## 🟪 **Domperidone (PO)**")
                     domp_mg = 0.25 * b1_bw
                     domp_ml = domp_mg / 1.0
-                    # 💡 已修正：劑量與換算後 mL 數直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage / 換算後mL數 (S21/Y21):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{domp_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{domp_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U21):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
             with g_r2_c3:
@@ -621,7 +606,6 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(0.3mg/kg/day) (S22):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mosa:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U22):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
 
-            # --- ROW 3: Metoclopramide / Dioctahedral Smectite / Racecadotril ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r3_c1, g_r3_c2, g_r3_c3 = st.columns(3)
             with g_r3_c1:
@@ -635,17 +619,15 @@ with tab1:
                     st.markdown("## 🪵 **Dioctahedral Smectite**")
                     smec_g = 1.5
                     smec_pac = smec_g / 3.0
-                    # 💡 已修正：克數與換算後包數直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage / 換算後包數 (S24/Y24):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #64B5F6;'>{smec_g:.1f} <span style='font-size:12px; color:#ff8a80; font-weight:bold;'>g/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{smec_pac:.2f} pac/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U24):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
             with g_r3_c3:
                 with st.container(border=True):
-                    st.markdown("## 🪶 **Racecadotril**")
+                    st.markdown("## 🟶 **Racecadotril**")
                     race = 1.5 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(1.5 mg/kg/dose) (S25):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{race:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U25):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
 
-            # --- ROW 4: Calcitriol / Sideral GOCCE P / Ursodeoxycholic acid ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r4_c1, g_r4_c2, g_r4_c3 = st.columns(3)
             with g_r4_c1:
@@ -653,7 +635,6 @@ with tab1:
                     st.markdown("## ☀️ **Calcitriol**")
                     calc_mcg = 0.1 * b1_bw
                     calc_ml = (calc_mcg * 0.32) / 0.5
-                    # 💡 已修正：mcg 劑量與換算後 mL 數直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage / 換算後mL數 (S26/Y26):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #64B5F6;'>{calc_mcg:.2f} <span style='font-size:12px; color:#ff8a80; font-weight:bold;'>mcg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{calc_ml:.3f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U26):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
             with g_r4_c2:
@@ -661,7 +642,6 @@ with tab1:
                     st.markdown("## 🛡️ **Sideral GOCCE P**")
                     sid_ml = b1_bw * 0.2
                     sid_mg = sid_ml * 7.0
-                    # 💡 已修正：mL 數與換算後 mg 數直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage / 換算後mg數 (S27/W27):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sid_ml:.2f} <span style='font-size:12px; color:#fff;'>mL/day</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{sid_mg:.2f} mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U27):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
             with g_r4_c3:
@@ -671,7 +651,6 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage (S28):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{urso:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U28):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8H</p>", unsafe_allow_html=True)
 
-            # --- ROW 5: Silymarin / Tranexamic Acid(IV) / Diazoxide(PO) ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r5_c1, g_r5_c2, g_r5_c3 = st.columns(3)
             with g_r5_c1:
@@ -693,7 +672,6 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Normal dosage(10 mg/kg/day) (S31):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{diaz:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U31):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
 
-            # --- ROW 6: Levothyroxine / Propranolol / Piracetam ---
             st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
             g_r6_c1, g_r6_c2, g_r6_c3 = st.columns(3)
             with g_r6_c1:
@@ -713,7 +691,6 @@ with tab1:
                     st.markdown("## 🧠 **Piracetam**")
                     pira_mg = 20 * b1_bw
                     pira_ml = pira_mg / 200.0
-                    # 💡 已修正：Piracetam 劑量與換算後 mL 數直槓並排
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Breath holding spell / 換算後mL數 (S34/Y34):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{pira_mg:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{pira_ml:.3f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency (U34):</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
 
