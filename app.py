@@ -714,7 +714,6 @@ with tab3:
 with tab4:
     st.markdown("### 🔌 PUMP 總表115 - 自動流速與劑量計算")
     
-    # 使用正確的變數名稱 b1_bw
     if b1_bw > 0:
         DRUG_DATA = {
             "Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5),
@@ -733,41 +732,52 @@ with tab4:
             selected_pump = st.selectbox("2. PUMP 組套比例:", list(ratios.keys()))
             factor = ratios[selected_pump]
         
-        i_flow = st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1)
+        # 強制轉換為 float，確保數學運算穩定
+        i_flow = float(st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1))
         
-        # 依照您的邏輯設定 f_vol 與 c_dose
-        if selected_pump == "1:1":
-            f_vol = max(10, math.ceil((i_flow * 24) / 10) * 10); c_dose = (b1_bw * 0.6) * (f_vol / 10)
-        elif selected_pump == "1:2":
-            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 0.6) * (f_vol / 5)
-        elif selected_pump == "1:5":
-            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (b1_bw * 6) * (f_vol / 20)
-        elif selected_pump == "1:10":
-            f_vol = max(10, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 6) * (f_vol / 10)
-        elif selected_pump == "1:20":
-            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 6) * (f_vol / 5)
-        elif selected_pump == "2:1":
-            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (b1_bw * 0.6) * (f_vol / 20)
-        elif selected_pump == "5:1":
-            f_vol = max(50, math.ceil((i_flow * 24) / 50) * 50); c_dose = (b1_bw * 0.6) * (f_vol / 50)
-        elif selected_pump == "10:1":
-            f_vol = max(100, math.ceil((i_flow * 24) / 100) * 100); c_dose = (b1_bw * 0.6) * (f_vol / 100)
-        else:
-            f_vol = 10; c_dose = 0
+        # 使用本地變數來計算，避免全域變數污染
+        if i_flow > 0:
+            if selected_pump == "1:1":
+                f_vol = float(max(10, math.ceil((i_flow * 24) / 10) * 10))
+                c_dose = (b1_bw * 0.6) * (f_vol / 10)
+            elif selected_pump == "1:2":
+                f_vol = float(max(5, math.ceil((i_flow * 24) / 5) * 5))
+                c_dose = (b1_bw * 0.6) * (f_vol / 5)
+            elif selected_pump == "1:5":
+                f_vol = float(max(20, math.ceil((i_flow * 24) / 20) * 20))
+                c_dose = (b1_bw * 6) * (f_vol / 20)
+            elif selected_pump == "1:10":
+                f_vol = float(max(10, math.ceil((i_flow * 24) / 5) * 5))
+                c_dose = (b1_bw * 6) * (f_vol / 10)
+            elif selected_pump == "1:20":
+                f_vol = float(max(5, math.ceil((i_flow * 24) / 5) * 5))
+                c_dose = (b1_bw * 6) * (f_vol / 5)
+            elif selected_pump == "2:1":
+                f_vol = float(max(20, math.ceil((i_flow * 24) / 20) * 20))
+                c_dose = (b1_bw * 0.6) * (f_vol / 20)
+            elif selected_pump == "5:1":
+                f_vol = float(max(50, math.ceil((i_flow * 24) / 50) * 50))
+                c_dose = (b1_bw * 0.6) * (f_vol / 50)
+            elif selected_pump == "10:1":
+                f_vol = float(max(100, math.ceil((i_flow * 24) / 100) * 100))
+                c_dose = (b1_bw * 0.6) * (f_vol / 100)
+            else:
+                f_vol, c_dose = 10.0, 0.0
 
-        # K 欄換算公式
-        k_dose = (c_dose / f_vol) * i_flow * 1000 / 60 / b1_bw if i_flow > 0 else 0
-        
-        st.success(f"🔧 配置：抽取 {c_dose:.2f} mg 加入 D5W 至 {f_vol} mL")
-        
-        is_out = (k_dose < min_r or k_dose > max_r) if i_flow > 0 else False
-        st.markdown(f"""
-        <div style='background-color: {"#3c1414" if is_out else "#1a1a1a"}; padding: 15px; border-radius: 8px; border: 1px solid {"#ff4444" if is_out else "#333"};'>
-            <p style='margin:0; font-size:16px;'>當前換算劑量:</p>
-            <p style='margin:0; font-size:32px; font-weight:bold; color:{"#ff4444" if is_out else "#4CAF50"};'>{k_dose:.3f} <span style='font-size:18px; color:#fff;'>mcg/kg/min</span></p>
-            {"<p style='color:#ff4444; font-weight:bold;'>⚠️ 警告：超出臨床建議範圍！</p>" if is_out else ""}
-        </div>
-        """, unsafe_allow_html=True)
+            k_dose = (c_dose / f_vol) * i_flow * 1000 / 60 / b1_bw
+            
+            st.success(f"🔧 配置：抽取 {c_dose:.2f} mg 加入 D5W 至 {f_vol} mL")
+            
+            is_out = (k_dose < min_r or k_dose > max_r)
+            st.markdown(f"""
+            <div style='background-color: {"#3c1414" if is_out else "#1a1a1a"}; padding: 15px; border-radius: 8px; border: 1px solid {"#ff4444" if is_out else "#333"};'>
+                <p style='margin:0; font-size:16px;'>當前換算劑量:</p>
+                <p style='margin:0; font-size:32px; font-weight:bold; color:{"#ff4444" if is_out else "#4CAF50"};'>{k_dose:.3f} <span style='font-size:18px; color:#fff;'>mcg/kg/min</span></p>
+                {"<p style='color:#ff4444; font-weight:bold;'>⚠️ 警告：超出臨床建議範圍！</p>" if is_out else ""}
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.write("請輸入流速以啟動計算...")
     else:
         st.warning("⚠️ 請先於左側輸入「BW 體重」。")
 
