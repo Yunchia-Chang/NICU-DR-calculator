@@ -616,13 +616,13 @@ with tab2:
                 st.markdown(f"<p style='margin:5px 0 0 0; font-size:13px; color:#ccc;'>🧮 換算後各元素暴露總量解析：</p><p style='margin:0; font-size:15px; font-weight:bold;'>Ca含量: <span style='color:#1E88E5;'>{f16_ca:.2f} mg/kg/day</span> &nbsp;<span style='color:#555;'>|</span>&nbsp; P含量: <span style='color:#1E88E5;'>{i16_p:.2f} mg/kg/day</span> &nbsp;<span style='color:#555;'>|</span>&nbsp; Vit D3: <span style='color:#4CAF50;'>{m16_d3:.1f} IU</span> &nbsp;<span style='color:#555;'>|</span>&nbsp; Vit A: <span style='color:#ffb300;'>{p16_vitA:.1f} IU/kg/dose</span></p>", unsafe_allow_html=True)
 
 # =============================================================================
-# 🎯 TAB 3: DART.BURST (⚡ 已完全改用原生 st.columns() 渲染，百分之百消滅引號衝突！)
+# 🎯 TAB 3: DART.BURST (優化優雅版：比照圖 2 風格)
 # =============================================================================
 with tab3:
     if not has_input:
         st.warning("⚠️ 請先於左側輸入「BW 體重」，系統將即時啟動 BPD 類固醇療程減量面板。")
     else:
-        st.markdown("<p style='color:#ffb300; font-weight:bold; font-size:14px; margin-bottom:10px;'>📊 系統核對模式：全功能已依據病患體重同步演算，單行直槓並排以極致壓縮視覺空間。</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#ffb300; font-weight:bold; font-size:14px; margin-bottom:12px;'>📊 臨床指引核對模式：已依據病患體重自動換算完整療程劑量。</p>", unsafe_allow_html=True)
         
         bpd_col1, bpd_col2, bpd_col3 = st.columns(3)
         
@@ -633,59 +633,36 @@ with tab3:
                 st.markdown("---")
                 burst_dose = 1.0 * b1_bw
                 
-                st.markdown("**• Stage I** (1mg/kg/dose Q6H 2 days):")
-                b_c1, b_c2, b_c3 = st.columns(3)
-                b_c1.metric(label="劑量", value=f"{burst_dose:.2f} mg")
-                b_c2.metric(label="頻率", value="Q6H")
-                b_c3.metric(label="天數", value="2 days")
-                st.write("")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage I</b> (1mg/kg/dose Q6H 2 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 12px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{burst_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>Q6H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>2 days</span></p>", unsafe_allow_html=True)
                 
-                st.markdown("**• Stage II** (1mg/kg/dose Q12H 2 days):")
-                b2_c1, b2_c2, b2_c3 = st.columns(3)
-                b2_c1.metric(label="劑量", value=f"{burst_dose:.2f} mg")
-                b2_c2.metric(label="頻率", value="Q12H")
-                b2_c3.metric(label="天數", value="2 days")
-                st.write("")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage II</b> (1mg/kg/dose Q12H 2 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 12px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{burst_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>2 days</span></p>", unsafe_allow_html=True)
                 
-                st.markdown("**• Stage III** (1mg/kg/dose QD 2 days):")
-                b3_c1, b3_c2, b3_c3 = st.columns(3)
-                b3_c1.metric(label="劑量", value=f"{burst_dose:.2f} mg")
-                b3_c2.metric(label="頻率", value="QD")
-                b3_c3.metric(label="天數", value="2 days")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage III</b> (1mg/kg/dose QD 2 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{burst_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>2 days</span></p>", unsafe_allow_html=True)
                 
         # 2. Dart (Dexamethasone)
         with bpd_col2:
             with st.container(border=True):
                 st.markdown("## 🟦 **Dart (Dexamethasone)**")
                 st.markdown("---")
-                dart_s1 = 0.075 * b1_bw; dart_s2 = 0.05 * b1_bw; dart_s3 = 0.025 * b1_bw; dart_s4 = 0.01 * b1_bw
+                dart_s1 = 0.075 * b1_bw
+                dart_s2 = 0.05 * b1_bw
+                dart_s3 = 0.025 * b1_bw
+                dart_s4 = 0.01 * b1_bw
                 
-                st.markdown("**• Stage I** (0.15mg/kg/day 3 days):")
-                d1_c1, d1_c2, d1_c3 = st.columns(3)
-                d1_c1.metric(label="劑量", value=f"{dart_s1:.3f} mg")
-                d1_c2.metric(label="頻率", value="Q12H")
-                d1_c3.metric(label="天數", value="3 days")
-                st.write("")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage I</b> (0.15mg/kg/day 3 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 12px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{dart_s1:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
                 
-                st.markdown("**• Stage II** (0.1mg/kg/day 3 days):")
-                d2_c1, d2_c2, d2_c3 = st.columns(3)
-                d2_c1.metric(label="劑量", value=f"{dart_s2:.3f} mg")
-                d2_c2.metric(label="頻率", value="Q12H")
-                d2_c3.metric(label="天數", value="3 days")
-                st.write("")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage II</b> (0.1mg/kg/day 3 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 12px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{dart_s2:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
                 
-                st.markdown("**• Stage III** (0.05mg/kg/day 2 days):")
-                d3_c1, d3_c2, d3_c3 = st.columns(3)
-                d3_c1.metric(label="劑量", value=f"{dart_s3:.3f} mg")
-                d3_c2.metric(label="頻率", value="Q12H")
-                d3_c3.metric(label="天數", value="2 days")
-                st.write("")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage III</b> (0.05mg/kg/day 2 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 12px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{dart_s3:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>2 days</span></p>", unsafe_allow_html=True)
                 
-                st.markdown("**• Stage IV** (0.02mg/kg/day 2 days):")
-                d4_c1, d4_c2, d4_c3 = st.columns(3)
-                d4_c1.metric(label="劑量", value=f"{dart_s4:.3f} mg")
-                d4_c2.metric(label="頻率", value="Q12H")
-                d4_c3.metric(label="天數", value="2 days")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage IV</b> (0.02mg/kg/day 2 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{dart_s4:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>2 days</span></p>", unsafe_allow_html=True)
                 
         # 3. STOP-BPD protocol (Hydrocortisone)
         with bpd_col3:
@@ -694,20 +671,11 @@ with tab3:
                 st.markdown("---")
                 hydro_dose = 0.5 * b1_bw
                 
-                st.markdown("**• Stage I** (1 mg/kg/day Q12h 7 days):")
-                h1_c1, h1_c2, h1_c3 = st.columns(3)
-                h1_c1.metric(label="劑量", value=f"{hydro_dose:.2f} mg")
-                h1_c2.metric(label="頻率", value="Q12H")
-                h1_c3.metric(label="天數", value="7 days")
-                st.write("")
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage I</b> (1 mg/kg/day Q12h 7 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 12px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>7 days</span></p>", unsafe_allow_html=True)
                 
-                st.markdown("**• Stage II** (0.5mg/kg/day QD for 3 days):")
-                h2_c1, h2_c2, h2_c3 = st.columns(3)
-                h2_c1.metric(label="劑量", value=f"{hydro_dose:.2f} mg")
-                h2_c2.metric(label="頻率", value="QD")
-                h2_c3.metric(label="天數", value="3 days")
-                st.markdown("<div style='height:120px;'></div>", unsafe_allow_html=True) # 保持高度對齊
-
+                st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage II</b> (0.5mg/kg/day QD for 3 days):</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
 # =============================================================================
 # TAB 4: PUMP 總表115
 # =============================================================================
