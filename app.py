@@ -714,45 +714,48 @@ with tab3:
 with tab4:
     st.markdown("### 🔌 PUMP 總表115 - 自動流速與劑量計算")
     
-    # 這裡定義預設變數，確保程式運行時不會找不到
-    DRUG_DATA = {
-        "Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5),
-        "Norepinephrine": (0.02, 0.1), "Milrinone": (0.25, 0.75), 
-        "Fentanyl": (0.008, 0.05), "Morphine": (0.16, 0.83), 
-        "Midazolam": (0.5, 6.66), "Cisatracurium": (0.75, 11.5), "Rocuronium": (8, 17)
-    }
-    
-    # 預定義組套對應表 (藥物係數, 體積基數)
-    pump_configs = {
-        "1:1": (0.6, 10), "1:2": (0.6, 5), "1:5": (6, 20), "1:10": (6, 10), 
-        "1:20": (6, 5), "2:1": (0.6, 20), "5:1": (0.6, 50), "10:1": (0.6, 100)
-    }
-
     if b1_bw > 0:
-        c1, c2 = st.columns(2)
-        s_drug = c1.selectbox("1. 藥物品項:", list(DRUG_DATA.keys()), key="p_drug")
-        s_ratio = c2.selectbox("2. PUMP 組套比例:", list(pump_configs.keys()), key="p_ratio")
+        # 定義核心數據
+        _DRUG_RANGES = {
+            "Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5),
+            "Norepinephrine": (0.02, 0.1), "Milrinone": (0.25, 0.75), 
+            "Fentanyl": (0.008, 0.05), "Morphine": (0.16, 0.83), 
+            "Midazolam": (0.5, 6.66), "Cisatracurium": (0.75, 11.5), "Rocuronium": (8, 17)
+        }
         
-        min_r, max_r = DRUG_DATA[s_drug]
+        c1, c2 = st.columns(2)
+        s_drug = c1.selectbox("1. 藥物品項:", list(_DRUG_RANGES.keys()), key="p_drug_v2")
+        s_ratio = c2.selectbox("2. PUMP 組套比例:", ["1:1", "1:2", "1:5", "1:10", "1:20", "2:1", "5:1", "10:1"], key="p_ratio_v2")
+        
+        min_r, max_r = _DRUG_RANGES[s_drug]
         st.info(f"📋 參考範圍: {min_r} - {max_r} mcg/kg/min")
         
-        i_flow = st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p_flow")
+        i_flow = st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p_flow_v2")
         
-        # 核心計算放在 if 內，確保只有當有流速時才計算，避免找不到變數
+        # 將所有參數與計算鎖在同一個 if block 內，確保變數一定存在
         if i_flow > 0:
-            dose_factor, vol_base = pump_configs[s_ratio]
-            
-            # 使用 math.ceil 確保數值正確
-            f_vol = float(max(vol_base, math.ceil((i_flow * 24) / vol_base) * vol_base))
-            c_dose = (b1_bw * dose_factor) * (f_vol / vol_base)
+            # 直接在內部設定好所有參數，不依賴外部環境
+            if s_ratio == "1:1": v_base, d_fact = 10, 0.6
+            elif s_ratio == "1:2": v_base, d_fact = 5, 0.6
+            elif s_ratio == "1:5": v_base, d_fact = 20, 6
+            elif s_ratio == "1:10": v_base, d_fact = 10, 6
+            elif s_ratio == "1:20": v_base, d_fact = 5, 6
+            elif s_ratio == "2:1": v_base, d_fact = 20, 0.6
+            elif s_ratio == "5:1": v_base, d_fact = 50, 0.6
+            elif s_ratio == "10:1": v_base, d_fact = 100, 0.6
+            else: v_base, d_fact = 10, 0
+
+            # 計算
+            f_vol = float(max(v_base, math.ceil((i_flow * 24) / v_base) * v_base))
+            c_dose = (b1_bw * d_fact) * (f_vol / v_base)
             k_dose = (c_dose / f_vol) * i_flow * 1000 / 60 / b1_bw
             
             st.success(f"🔧 配置：抽取 {c_dose:.2f} mg 加入 D5W 至 {f_vol} mL")
-            
             is_out = (k_dose < min_r or k_dose > max_r)
+            
             st.markdown(f"""
-            <div style='background-color: {"#3c1414" if is_out else "#1a1a1a"}; padding: 15px; border-radius: 8px;'>
-                <p style='margin:0; font-size:16px;'>🎯 換算劑量:</p>
+            <div style='background-color: {"#3c1414" if is_out else "#1a1a1a"}; padding: 15px; border-radius: 8px; border: 1px solid {"#ff4444" if is_out else "#333"};'>
+                <p style='margin:0; font-size:16px;'>🎯 換算劑量 ({s_drug}):</p>
                 <p style='margin:0; font-size:32px; font-weight:bold; color: {"#ff4444" if is_out else "#4CAF50"}'>{k_dose:.3f} <span style='font-size:18px; color:#fff;'>mcg/kg/min</span></p>
                 {"<p style='color:#ff4444; font-weight:bold;'>⚠️ 警告：超出建議範圍！</p>" if is_out else ""}
             </div>
