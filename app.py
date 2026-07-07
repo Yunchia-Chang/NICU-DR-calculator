@@ -732,25 +732,25 @@ with tab4:
 
     i_flow = st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1)
 
-    if b1_bw > 0:
+    if bw > 0:
         if selected_pump == "1:1":
-            f_vol = max(10, math.ceil((i_flow * 24) / 10) * 10); c_dose = (b1_bw * 0.6) * (f_vol / 10)
+            f_vol = max(10, math.ceil((i_flow * 24) / 10) * 10); c_dose = (bw * 0.6) * (f_vol / 10)
         elif selected_pump == "1:2":
-            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 0.6) * (f_vol / 5)
+            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (bw * 0.6) * (f_vol / 5)
         elif selected_pump == "1:5":
-            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (b1_bw * 6) * (f_vol / 20)
+            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (bw * 6) * (f_vol / 20)
         elif selected_pump == "1:10":
-            f_vol = max(10, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 6) * (f_vol / 10)
+            f_vol = max(10, math.ceil((i_flow * 24) / 5) * 5); c_dose = (bw * 6) * (f_vol / 10)
         elif selected_pump == "1:20":
-            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 6) * (f_vol / 5)
+            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (bw * 6) * (f_vol / 5)
         elif selected_pump == "2:1":
-            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (b1_bw * 0.6) * (f_vol / 20)
+            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (bw * 0.6) * (f_vol / 20)
         elif selected_pump == "5:1":
-            f_vol = max(50, math.ceil((i_flow * 24) / 50) * 50); c_dose = (b1_bw * 0.6) * (f_vol / 50)
+            f_vol = max(50, math.ceil((i_flow * 24) / 50) * 50); c_dose = (bw * 0.6) * (f_vol / 50)
         elif selected_pump == "10:1":
-            f_vol = max(100, math.ceil((i_flow * 24) / 100) * 100); c_dose = (b1_bw * 0.6) * (f_vol / 100)
+            f_vol = max(100, math.ceil((i_flow * 24) / 100) * 100); c_dose = (bw * 0.6) * (f_vol / 100)
         
-        k_dose = (c_dose / f_vol) * i_flow * 1000 / 60 / b1_bw
+        k_dose = (c_dose / f_vol) * i_flow * 1000 / 60 / bw
         
         st.success(f"🔧 配置指引：抽取 {c_dose:.2f} mg，加 D5W 至 {f_vol} mL")
         st.metric("🎯 換算後單位劑量:", f"{k_dose:.3f} mcg/kg/min")
