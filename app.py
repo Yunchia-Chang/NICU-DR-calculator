@@ -1,25 +1,13 @@
 import streamlit as st
 import math
 
-# --- 網頁外觀設定 ---
+# --- 1. 網頁設定 ---
 st.set_page_config(page_title="NICU智慧計算機", page_icon="👶", layout="wide")
+st.markdown("<style>.block-container {padding-top: 0.5rem;}</style>", unsafe_allow_html=True)
 
-# --- CSS 瘦身注入 ---
-st.markdown("""
-    <style>
-        .block-container {padding-top: 0.5rem; padding-bottom: 0rem;}
-        h2, h3, h4 {margin-top: 0px !important; margin-bottom: 4px !important; padding-top: 0px !important;}
-        div[data-testid="stForm"] {padding: 5px;}
-        section[data-testid="stSidebar"] .block-container {padding-top: 1rem;}
-    </style>
-""", unsafe_allow_html=True)
-
-# --- 1. 統一計算函數 (參數已對齊：bw, ratio, flow) ---
+# --- 2. 核心計算函數 ---
 def calculate_pump_dose(bw, ratio, flow):
-    params = {
-        "1:1": (0.6, 10), "1:2": (0.6, 5), "1:5": (6, 20), "1:10": (6, 10), 
-        "1:20": (6, 5), "2:1": (0.6, 20), "5:1": (0.6, 50), "10:1": (0.6, 100)
-    }
+    params = {"1:1": (0.6, 10), "1:2": (0.6, 5), "1:5": (6, 20), "1:10": (6, 10), "1:20": (6, 5), "2:1": (0.6, 20), "5:1": (0.6, 50), "10:1": (0.6, 100)}
     if ratio not in params: return 0, 0, 0
     d_fact, v_base = params[ratio]
     f_vol = float(max(v_base, math.ceil((flow * 24) / v_base) * v_base))
@@ -27,86 +15,19 @@ def calculate_pump_dose(bw, ratio, flow):
     k_dose = (c_dose / f_vol) * flow * 1000 / 60 / bw
     return f_vol, c_dose, k_dose
 
-# --- 2. 頁面框架 ---
-st.markdown("<h2 style='font-size:24px; margin:0;'>👶 NICU智慧計算機</h2>", unsafe_allow_html=True)
-st.write("---")
-
-# 頂部標題列
-col_title, col_sub = st.columns([2, 3])
-with col_title:
-    st.markdown("<h2 style='font-size:24px; margin:0;'>👶 NICU智慧計算機</h2>", unsafe_allow_html=True)
-with col_sub:
-    st.markdown("<p style='margin:6px 0 0 0; color:#888; font-size:13px;'>🔒 兒科/新生兒加護病房專用 | 臨床決策支援系統 (CDSS)</p>", unsafe_allow_html=True)
-
-st.write("---")
-
-# --- 側邊欄：基本資料輸入 ---
+# --- 3. 側邊欄輸入 (加上固定 Key) ---
 st.sidebar.header("📥 病健基本資料輸入")
-b1_bw = st.sidebar.number_input("BW 體重 (kg)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
+b1_bw = st.sidebar.number_input("BW 體重 (kg)", value=2.5, step=0.1, key="bw_side")
+f1_ga_wk = st.sidebar.number_input("GA 週數", value=37, step=1, key="ga_side")
+h1_ga_day = st.sidebar.number_input("GA 天數", value=0, step=1, key="day_side")
+l1_pna = st.sidebar.number_input("PNA 天數", value=0, step=1, key="pna_side")
+category = st.sidebar.radio("📁 藥物類別選擇", ["1. Antimicrobial agents", "2. Diuretics", "3. PDA", "4. 肺高壓", "5. Apnea/RDS Surfactant", "6. Seizure control", "7. Sedation", "8. Miscellaneous.GCSF", "9. 胃腸類藥品/營養補充品/維他命/其它"], key="cat_side")
 
-st.sidebar.write("---")
-st.sidebar.markdown("**GA 胎齡**")
-f1_ga_wk = st.sidebar.number_input("GA 週數", min_value=0, max_value=45, value=0, step=1)
-h1_ga_day = st.sidebar.number_input("GA 天數", min_value=0, max_value=6, value=0, step=1)
-
-st.sidebar.write("---")
-l1_pna = st.sidebar.number_input("PNA 出生天數 (days)", min_value=0, max_value=365, value=0, step=1)
-
-# 後台核心數據計算
-ga_total_days = (f1_ga_wk * 7) + h1_ga_day
-pma_total_days = ga_total_days + l1_pna
-q1_pma_wk = pma_total_days // 7
-s1_pma_day = pma_total_days % 7
-
-# 側邊欄：常用藥物大項
-st.sidebar.write("---")
-st.sidebar.header("📁 藥物類別選擇")
-category = st.sidebar.radio(
-    "請直接點選常用藥物大項：",
-    [
-        "1. Antimicrobial agents",
-        "2. Diuretics",
-        "3. PDA",
-        "4. 肺高壓",
-        "5. Apnea/RDS Surfactant",
-        "6. Seizure control",
-        "7. Sedation",
-        "8. Miscellaneous.GCSF",
-        "9. 胃腸類藥品/營養補充品/維他命/其它"
-    ]
-)
-
-# --- 📊 當前病患生理指標核對 ---
 has_input = (b1_bw > 0 and f1_ga_wk > 0)
+ga_total_days = (f1_ga_wk * 7) + h1_ga_day
 
-if has_input:
-    st.markdown(
-        f"""
-        <div style='display: flex; gap: 15px; align-items: center; background-color: #1a1a1a; padding: 6px 12px; border-radius: 4px; border-left: 4px solid #1E88E5;'>
-            <span style='font-size:14px; font-weight:bold; color:#ccc;'>📊 生理指標核對：</span>
-            <span style='font-size:14px; color:#fff;'>👶 <b>BW:</b> <span style='color:#1E88E5; font-weight:bold;'>{b1_bw:.2f} kg</span></span>
-            <span style='font-size:14px; color:#fff;'>| &nbsp;⏳ <b>GA:</b> <b>{f1_ga_wk} 週 + {h1_ga_day} 天</b></span>
-            <span style='font-size:14px; color:#fff;'>| &nbsp;🧮 <b>PMA:</b> <span style='color:#4CAF50; font-weight:bold;'>{q1_pma_wk} 週 + {s1_pma_day} 天</span></span>
-        </div>
-        """, 
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        """
-        <div style='padding: 6px 12px; background-color: #2b2214; border-left: 4px solid #ffb300; border-radius: 4px; font-size:13px; color:#ffe082;'>
-            ⚠️ <b>系統提示</b>：請先於左側輸入「BW 體重」及「GA 週數」，系統將即時啟動臨床核對與劑量計算。
-        </div>
-        """, 
-        unsafe_allow_html=True
-    )
-
-st.write("---")
-
-# 核心功能頁籤
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "💊 常用藥物計算機", "⚡ Ion dosage", "🫁 DART.BURST", "🔌 PUMP 總表115", "💤 Dexmedetomidine"
-])
+# --- 4. 頁籤 ---
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["💊 常用藥物", "⚡ Ion dosage", "🫁 DART.BURST", "🔌 PUMP 總表115", "💤 Dexmedetomidine"])
 
 # =============================================================================
 # TAB 1: 常用藥物計算機 (分類 1 ~ 9)
@@ -720,32 +641,27 @@ with tab3:
                 h2_c2.metric(label="頻率", value="QD")
                 h2_c3.metric(label="天數", value="3 days")
                 st.markdown("<div style='height:120px;'></div>", unsafe_allow_html=True) # 保持高度對齊
-
 # =============================================================================
-# TAB 4: 🔌 PUMP 總表115 - 使用函數封裝，徹底解決 NameError
+#🔌TAB 4: PUMP 總表 
 # =============================================================================
 with tab4:
-    st.markdown("### 🔌 PUMP 總表115 - 自動流速與劑量計算")
-    if b1_bw > 0:
-        DRUG_RANGES = {"Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5), "Norepinephrine": (0.02, 0.1), "Milrinone": (0.25, 0.75), "Fentanyl": (0.008, 0.05), "Morphine": (0.16, 0.83), "Midazolam": (0.5, 6.66), "Cisatracurium": (0.75, 11.5), "Rocuronium": (8, 17)}
-        c1, c2 = st.columns(2)
-        s_drug = c1.selectbox("1. 藥物品項:", list(DRUG_RANGES.keys()), key="p_drug_fixed")
-        s_ratio = c2.selectbox("2. PUMP 組套比例:", ["1:1", "1:2", "1:5", "1:10", "1:20", "2:1", "5:1", "10:1"], key="p_ratio_fixed")
-        i_flow = st.number_input("輸入流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p_flow_fixed")
-        
-        if i_flow > 0:
-            # 這裡只傳入 3 個參數，與上方函數定義一致
-            f_vol, c_dose, k_dose = calculate_pump_dose(b1_bw, s_ratio, i_flow)
-            st.success(f"🔧 配置：抽取 {c_dose:.2f} mg 加入 D5W 至 {f_vol} mL")
-            min_r, max_r = DRUG_RANGES[s_drug]
-            is_out = (k_dose < min_r or k_dose > max_r)
-            st.markdown(f"<div style='background-color: {'#3c1414' if is_out else '#1a1a1a'}; padding: 15px; border-radius: 8px;'>🎯 換算劑量 ({s_drug}): <span style='font-size:32px; font-weight:bold; color: {'#ff4444' if is_out else '#4CAF50'}'>{k_dose:.3f} mcg/kg/min</span></div>", unsafe_allow_html=True)
-    else: st.warning("請先於左側輸入「BW 體重」。")
+    st.markdown("### 🔌 PUMP 總表115 - 自動計算")
+    d_data = {"Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5), "Norepinephrine": (0.02, 0.1), "Milrinone": (0.25, 0.75), "Fentanyl": (0.008, 0.05), "Morphine": (0.16, 0.83), "Midazolam": (0.5, 6.66), "Cisatracurium": (0.75, 11.5), "Rocuronium": (8, 17)}
+    c1, c2 = st.columns(2)
+    s_drug = c1.selectbox("藥物:", list(d_data.keys()), key="p4_drug")
+    s_rat = c2.selectbox("比例:", ["1:1", "1:2", "1:5", "1:10", "1:20", "2:1", "5:1", "10:1"], key="p4_rat")
+    i_flow = st.number_input("流速 (mL/hr):", value=0.5, step=0.1, key="p4_flow")
+    if b1_bw > 0 and i_flow > 0:
+        f, c, k = calculate_pump_dose(b1_bw, s_rat, i_flow)
+        st.success(f"🔧 配置：抽取 {c:.2f} mg 加入 D5W 至 {f} mL")
+        st.metric("🎯 劑量:", f"{k:.3f} mcg/kg/min")
+
 # =============================================================================
-# TAB 5: Dexmedetomidine
+#💤TAB 5: Dexmedetomidine
 # =============================================================================
 with tab5:
-    if b1_bw > 0:
+    st.markdown("### 💤 Dexmedetomidine")
+        if b1_bw > 0:
         st.markdown("### 💤 Dexmedetomidine 四種配方濃度流速與劑量換算器")
         d1_min, d1_max = b1_bw * 0.01, b1_bw * 0.07
         d2_min, d2_max = b1_bw * 0.0166, b1_bw * 0.116
@@ -776,15 +692,8 @@ with tab5:
             st.write(f"當前劑量: {dose4:.3f} mcg/kg/hr")
     else:
         st.warning("⚠️ 請先於左側輸入「BW 體重」。")
+    st.write("Dex 計算模組已啟用")
 
-# --- 底部專業版權宣告 ---
+# --- 頁尾 ---
 st.write("---")
-st.markdown(
-    """
-    <div style='text-align: center; color: #888888; font-size: 12px; line-height: 1.6;'>
-        🔒 <b>臨床決策支援系統 (CDSS) 免責宣告</b>：本工具計算結果僅供醫療專業人員參考核對，處方開立仍應以臨床實際病情與主治醫師之最終判斷為準。<br>
-        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務組 張運佳藥師 所有 <span style='color: #ff8a80; font-weight: bold;'>請勿隨意轉傳</span></b>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
+st.markdown("🔒 版權為中國醫藥大學附設醫院藥劑部所有")
