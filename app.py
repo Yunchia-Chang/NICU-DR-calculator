@@ -1,13 +1,10 @@
 import streamlit as st
+import math
 
 # --- 網頁外觀設定 ---
-st.set_page_config(
-    page_title="NICU智慧計算機", 
-    page_icon="👶", 
-    layout="wide"
-)
+st.set_page_config(page_title="NICU智慧計算機", page_icon="👶", layout="wide")
 
-# --- 🎨 頁面空間物理大瘦身 CSS 注入 ---
+# --- CSS 注入 ---
 st.markdown("""
     <style>
         .block-container {padding-top: 0.5rem; padding-bottom: 0rem;}
@@ -17,6 +14,20 @@ st.markdown("""
         section[data-testid="stSidebar"] .block-container {padding-top: 1rem;}
     </style>
 """, unsafe_allow_html=True)
+
+# --- 獨立函數：PUMP 計算 ---
+def calculate_pump_dose(bw, ratio, flow):
+    # 組套參數: (藥物係數, 體積基數)
+    params = {
+        "1:1": (0.6, 10), "1:2": (0.6, 5), "1:5": (6, 20), "1:10": (6, 10), 
+        "1:20": (6, 5), "2:1": (0.6, 20), "5:1": (0.6, 50), "10:1": (0.6, 100)
+    }
+    if ratio not in params: return 0, 0, 0
+    d_fact, v_base = params[ratio]
+    f_vol = float(max(v_base, math.ceil((flow * 24) / v_base) * v_base))
+    c_dose = (bw * d_fact) * (f_vol / v_base)
+    k_dose = (c_dose / f_vol) * flow * 1000 / 60 / bw
+    return f_vol, c_dose, k_dose
 
 # 頂部標題列
 col_title, col_sub = st.columns([2, 3])
