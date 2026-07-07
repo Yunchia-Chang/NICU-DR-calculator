@@ -691,52 +691,67 @@ with tab5:
     else:
         st.markdown("<h3 style='margin:0px 0px 10px 0px;'>💤 Dexmedetomidine 四種配方濃度流速與劑量換算器</h3>", unsafe_allow_html=True)
         
+        # --- 4 種稀釋配方橫向 2x2 並排呈現（激省垂直空間，視覺焦點集中） ---
         dex_r1_c1, dex_r1_c2 = st.columns(2)
         
-        # 配方一：20 mcg/mL
+        # 配方一：20 mcg/mL (5 mL)
         with dex_r1_c1:
-            d1_min = b1_bw * 0.01; d1_max = b1_bw * 0.07
-            j2_val = st.number_input("請輸入配方一設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d1_min, 3)) if d1_min > 0 else 0.0, step=0.01, key="j2_flow")
-            l2_dose = (100.0 / 5.0 * j2_val) / b1_bw if b1_bw > 0 else 0.0
-            is_d1_out = (j2_val < d1_min or j2_val > d1_max) if has_input else False
-            bg_color_d1 = "#3c1414; border: 1px solid #ff4444;" if is_d1_out else "#1a1a1a; border: 1px solid #333;"
-            
-            st.markdown(f"<div style='background-color: {bg_color_d1}; padding: 12px; border-radius: 6px; margin-bottom: 8px;'><h3 style='color:#fff; margin:0;'>🧪 配方一：5 mL <span style='font-size:14px; color:#888;'>(20 mcg/mL)</span></h3><p style='margin:4px 0; font-size:13px; color:#aaa;'>安全範圍: {d1_min:.3f} ~ {d1_max:.3f} mL/hr</p><p style='margin:2px 0; font-size:16px; font-weight:bold;'>當前換算劑量: <span style='color:#64B5F6;'>{l2_dose:.3f} mcg/kg/hr</span></p>{' <p style=\"color:#ff4444; font-size:12px; margin:2px 0 0 0; font-weight:bold;\">⚠️ 警告：流速已超出安全建議範圍！</p>' if is_d1_out else ''}</div>", unsafe_allow_html=True)
+            with st.container(border=True):
+                st.markdown("### 🧪 **配方一：1 mL in NS 5 mL** &nbsp;&nbsp;`(20 mcg/mL)`")
+                d1_min = b1_bw * 0.01
+                d1_max = b1_bw * 0.07
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間 (0.2-1.4 mcg/kg/hr):</p><p style='margin:0 0 10px 0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{d1_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d1_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                # 獨立流速互動核對
+                j2_val = st.number_input("請輸入配方一設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d1_min, 3)) if d1_min > 0 else 0.0, step=0.01, key="j2_flow")
+                l2_dose = (100.0 / 5.0 * j2_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{l2_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
 
-        # 配方二：12 mcg/mL
+        # 配方二：12 mcg/mL (8.333 mL)
         with dex_r1_c2:
-            d2_min = b1_bw * 0.0166; d2_max = b1_bw * 0.116
-            j3_val = st.number_input("請輸入配方二設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d2_min, 3)) if d2_min > 0 else 0.0, step=0.01, key="j3_flow")
-            l3_dose = (100.0 / 8.333 * j3_val) / b1_bw if b1_bw > 0 else 0.0
-            is_d2_out = (j3_val < d2_min or j3_val > d2_max) if has_input else False
-            bg_color_d2 = "#3c1414; border: 1px solid #ff4444;" if is_d2_out else "#1a1a1a; border: 1px solid #333;"
-            
-            st.markdown(f"<div style='background-color: {bg_color_d2}; padding: 12px; border-radius: 6px; margin-bottom: 8px;'><h3 style='color:#fff; margin:0;'>🧪 配方二：8.333 mL <span style='font-size:14px; color:#888;'>(12 mcg/mL)</span></h3><p style='margin:4px 0; font-size:13px; color:#aaa;'>安全範圍: {d2_min:.3f} ~ {d2_max:.3f} mL/hr</p><p style='margin:2px 0; font-size:16px; font-weight:bold;'>當前換算劑量: <span style='color:#64B5F6;'>{l3_dose:.3f} mcg/kg/hr</span></p>{' <p style=\"color:#ff4444; font-size:12px; margin:2px 0 0 0; font-weight:bold;\">⚠️ 警告：流速已超出安全建議範圍！</p>' if is_d2_out else ''}</div>", unsafe_allow_html=True)
+            with st.container(border=True):
+                st.markdown("### 🧪 **配方二：1 mL in NS 8.333 mL** &nbsp;&nbsp;`(12 mcg/mL)`")
+                d2_min = b1_bw * 0.0166
+                d2_max = b1_bw * 0.116
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間:</p><p style='margin:0 0 10px 0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{d2_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d2_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                j3_val = st.number_input("請輸入配方二設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d2_min, 3)) if d2_min > 0 else 0.0, step=0.01, key="j3_flow")
+                l3_dose = (100.0 / 8.333 * j3_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{l3_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
 
         st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
         dex_r2_c1, dex_r2_c2 = st.columns(2)
         
-        # 配方三：8 mcg/mL
+        # 配方三：8 mcg/mL (12.5 mL)
         with dex_r2_c1:
-            d3_min = b1_bw * 0.025; d3_max = b1_bw * 0.175
-            j4_val = st.number_input("請輸入配方三設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d3_min, 3)) if d3_min > 0 else 0.0, step=0.01, key="j4_flow")
-            l4_dose = (100.0 / 12.5 * j4_val) / b1_bw if b1_bw > 0 else 0.0
-            is_d3_out = (j4_val < d3_min or j4_val > d3_max) if has_input else False
-            bg_color_d3 = "#3c1414; border: 1px solid #ff4444;" if is_d3_out else "#1a1a1a; border: 1px solid #333;"
-            
-            st.markdown(f"<div style='background-color: {bg_color_d3}; padding: 12px; border-radius: 6px; margin-bottom: 8px;'><h3 style='color:#fff; margin:0;'>🧪 配方三：12.5 mL <span style='font-size:14px; color:#888;'>(8 mcg/mL)</span></h3><p style='margin:4px 0; font-size:13px; color:#aaa;'>安全範圍: {d3_min:.3f} ~ {d3_max:.3f} mL/hr</p><p style='margin:2px 0; font-size:16px; font-weight:bold;'>當前換算劑量: <span style='color:#64B5F6;'>{l4_dose:.3f} mcg/kg/hr</span></p>{' <p style=\"color:#ff4444; font-size:12px; margin:2px 0 0 0; font-weight:bold;\">⚠️ 警告：流速已超出安全建議範圍！</p>' if is_d3_out else ''}</div>", unsafe_allow_html=True)
+            with st.container(border=True):
+                st.markdown("### 🧪 **配方三：1 mL in NS 12.5 mL** &nbsp;&nbsp;`(8 mcg/mL)`")
+                d3_min = b1_bw * 0.025
+                d3_max = b1_bw * 0.175
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間:</p><p style='margin:0 0 10px 0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{d3_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d3_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                j4_val = st.number_input("請輸入配方三設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d3_min, 3)) if d3_min > 0 else 0.0, step=0.01, key="j4_flow")
+                l4_dose = (100.0 / 12.5 * j4_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{l4_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
 
-        # 配方四：4 mcg/mL
+        # 🌟 配方四：4 mcg/mL (25 mL) — 💡 依據要求：加框與高彩標註「最建議配方」
         with dex_r2_c2:
-            d4_min = b1_bw * 0.05; d4_max = b1_bw * 0.35
-            j5_val = st.number_input("請輸入配方四設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d4_min, 3)) if d4_min > 0 else 0.0, step=0.01, key="j5_flow")
-            l5_dose = (100.0 / 25.0 * j5_val) / b1_bw if b1_bw > 0 else 0.0
-            is_d4_out = (j5_val < d4_min or j5_val > d4_max) if has_input else False
-            bg_color_d4 = "#3c1414; border: 1px solid #ff4444;" if is_d4_out else "#2b2214; border: 1px solid #ffb300;"
-            text_color_d4 = "#ff4444" if is_d4_out else "#ffb300"
-            
-            st.markdown(f"<div style='background-color: {bg_color_d4}; padding: 12px; border-radius: 6px; margin-bottom: 8px;'><h3 style='color:{text_color_d4}; margin:0;'>🌟 配方四：25 mL <span style='font-size:14px; color:#aaa;'>(4 mcg/mL)</span></h3><p style='margin:4px 0; font-size:13px; color:#aaa;'>安全範圍: {d4_min:.3f} ~ {d4_max:.3f} mL/hr (操作空間最大)</p><p style='margin:2px 0; font-size:16px; font-weight:bold;'>當前換算劑量: <span style='color:{text_color_d4}; text-decoration:underline;'>{l5_dose:.3f} mcg/kg/hr</span></p>{' <p style=\"color:#ff4444; font-size:12px; margin:2px 0 0 0; font-weight:bold;\">⚠️ 警告：流速已超出安全建議範圍！</p>' if is_d4_out else ' <p style=\"color:#4CAF50; font-size:12px; margin:2px 0 0 0; font-weight:bold;\">✓ 臨床最推薦調配配方</p>'}</div>", unsafe_allow_html=True)
-
+            st.markdown(
+                """
+                <div style='background-color: #2b2214; padding: 2px 10px; border-radius: 4px 4px 0 0; border-left: 4px solid #ffb300; border-top: 1px solid #ffb300; border-right: 1px solid #ffb300;'>
+                    <span style='color: #ffb300; font-weight: bold; font-size: 13px;'>🌟 臨床最推薦調配配方 (流速操作範圍最安全)</span>
+                </div>
+                """, unsafe_allow_html=True
+            )
+            with st.container(border=True):
+                st.markdown("### 🌟 **配方四：1 mL in NS 25 mL** &nbsp;&nbsp;`(4 mcg/mL)`")
+                d4_min = b1_bw * 0.05
+                d4_max = b1_bw * 0.35
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間 (安全操作空間大):</p><p style='margin:0 0 10px 0; font-size: 19px; font-weight: bold; color: #ffb300;'>{d4_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d4_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                j5_val = st.number_input("請輸入配方四設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d4_min, 3)) if d4_min > 0 else 0.0, step=0.01, key="j5_flow")
+                l5_dose = (100.0 / 25.0 * j5_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 24px; font-weight: bold; color: #ffb300;'>{l5_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
 # --- 底部專業版權宣告 ---
 st.write("---")
 st.markdown(
