@@ -714,49 +714,62 @@ with tab3:
 with tab4:
     st.markdown("### 🔌 PUMP 總表115 - 自動流速與劑量計算")
     
-    DRUG_DATA = {
-        "Dopamine": "3 - 10 mcg/kg/min", "Dobutamine": "2 - 20 mcg/kg/min",
-        "Epinephrine": "0.05 - 0.5 mcg/kg/min", "Norepinephrine": "0.02 - 0.1 mcg/kg/min",
-        "Milrinone": "0.25 - 0.75 mcg/kg/min", "Fentanyl": "0.008 - 0.05 mcg/kg/min",
-        "Morphine": "0.16 - 0.83 mcg/kg/min", "Midazolam": "0.5 - 6.66 mcg/kg/min",
-        "Cisatracurium": "0.75 - 11.5 mcg/kg/min", "Rocuronium": "8 - 17 mcg/kg/min"
-    }
-    
-    c1, c2 = st.columns(2)
-    with c1: 
-        selected_drug = st.selectbox("1. 藥物品項:", list(DRUG_DATA.keys()))
-        st.info(f"📋 參考範圍: **{DRUG_DATA[selected_drug]}**")
-    with c2: 
-        pump_options = ["1:1", "1:2", "1:5", "1:10", "1:20", "2:1", "5:1", "10:1"]
-        selected_pump = st.selectbox("2. PUMP 組套比例:", pump_options)
-
-    i_flow = st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1)
-
-    if bw > 0:
+    # 使用正確的變數名稱 b1_bw
+    if b1_bw > 0:
+        DRUG_DATA = {
+            "Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5),
+            "Norepinephrine": (0.02, 0.1), "Milrinone": (0.25, 0.75), 
+            "Fentanyl": (0.008, 0.05), "Morphine": (0.16, 0.83), 
+            "Midazolam": (0.5, 6.66), "Cisatracurium": (0.75, 11.5), "Rocuronium": (8, 17)
+        }
+        ratios = {"1:1": 1.0, "1:2": 0.5, "1:5": 0.2, "1:10": 0.1, "1:20": 0.05, "2:1": 2.0, "5:1": 5.0, "10:1": 10.0}
+        
+        c1, c2 = st.columns(2)
+        with c1: 
+            selected_drug = st.selectbox("1. 藥物品項:", list(DRUG_DATA.keys()))
+            min_r, max_r = DRUG_DATA[selected_drug]
+            st.info(f"📋 參考範圍: {min_r} - {max_r} mcg/kg/min")
+        with c2: 
+            selected_pump = st.selectbox("2. PUMP 組套比例:", list(ratios.keys()))
+            factor = ratios[selected_pump]
+        
+        i_flow = st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1)
+        
+        # 依照您的邏輯設定 f_vol 與 c_dose
         if selected_pump == "1:1":
-            f_vol = max(10, math.ceil((i_flow * 24) / 10) * 10); c_dose = (bw * 0.6) * (f_vol / 10)
+            f_vol = max(10, math.ceil((i_flow * 24) / 10) * 10); c_dose = (b1_bw * 0.6) * (f_vol / 10)
         elif selected_pump == "1:2":
-            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (bw * 0.6) * (f_vol / 5)
+            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 0.6) * (f_vol / 5)
         elif selected_pump == "1:5":
-            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (bw * 6) * (f_vol / 20)
+            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (b1_bw * 6) * (f_vol / 20)
         elif selected_pump == "1:10":
-            f_vol = max(10, math.ceil((i_flow * 24) / 5) * 5); c_dose = (bw * 6) * (f_vol / 10)
+            f_vol = max(10, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 6) * (f_vol / 10)
         elif selected_pump == "1:20":
-            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (bw * 6) * (f_vol / 5)
+            f_vol = max(5, math.ceil((i_flow * 24) / 5) * 5); c_dose = (b1_bw * 6) * (f_vol / 5)
         elif selected_pump == "2:1":
-            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (bw * 0.6) * (f_vol / 20)
+            f_vol = max(20, math.ceil((i_flow * 24) / 20) * 20); c_dose = (b1_bw * 0.6) * (f_vol / 20)
         elif selected_pump == "5:1":
-            f_vol = max(50, math.ceil((i_flow * 24) / 50) * 50); c_dose = (bw * 0.6) * (f_vol / 50)
+            f_vol = max(50, math.ceil((i_flow * 24) / 50) * 50); c_dose = (b1_bw * 0.6) * (f_vol / 50)
         elif selected_pump == "10:1":
-            f_vol = max(100, math.ceil((i_flow * 24) / 100) * 100); c_dose = (bw * 0.6) * (f_vol / 100)
+            f_vol = max(100, math.ceil((i_flow * 24) / 100) * 100); c_dose = (b1_bw * 0.6) * (f_vol / 100)
+        else:
+            f_vol = 10; c_dose = 0
+
+        # K 欄換算公式
+        k_dose = (c_dose / f_vol) * i_flow * 1000 / 60 / b1_bw if i_flow > 0 else 0
         
-        k_dose = (c_dose / f_vol) * i_flow * 1000 / 60 / bw
+        st.success(f"🔧 配置：抽取 {c_dose:.2f} mg 加入 D5W 至 {f_vol} mL")
         
-        st.success(f"🔧 配置指引：抽取 {c_dose:.2f} mg，加 D5W 至 {f_vol} mL")
-        st.metric("🎯 換算後單位劑量:", f"{k_dose:.3f} mcg/kg/min")
-        
-        if selected_drug == "Norepinephrine" and selected_pump in ["5:1", "10:1"]:
-            st.error("⚠️ 警告：濃度高於 2:1，建議由中央靜脈(CVC)給藥！")
+        is_out = (k_dose < min_r or k_dose > max_r) if i_flow > 0 else False
+        st.markdown(f"""
+        <div style='background-color: {"#3c1414" if is_out else "#1a1a1a"}; padding: 15px; border-radius: 8px; border: 1px solid {"#ff4444" if is_out else "#333"};'>
+            <p style='margin:0; font-size:16px;'>當前換算劑量:</p>
+            <p style='margin:0; font-size:32px; font-weight:bold; color:{"#ff4444" if is_out else "#4CAF50"};'>{k_dose:.3f} <span style='font-size:18px; color:#fff;'>mcg/kg/min</span></p>
+            {"<p style='color:#ff4444; font-weight:bold;'>⚠️ 警告：超出臨床建議範圍！</p>" if is_out else ""}
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.warning("⚠️ 請先於左側輸入「BW 體重」。")
 
 # =============================================================================
 # TAB 5: Dexmedetomidine
