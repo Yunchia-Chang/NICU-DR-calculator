@@ -4,20 +4,18 @@ import math
 # --- 網頁外觀設定 ---
 st.set_page_config(page_title="NICU智慧計算機", page_icon="👶", layout="wide")
 
-# --- CSS 注入 ---
+# --- CSS 瘦身注入 ---
 st.markdown("""
     <style>
         .block-container {padding-top: 0.5rem; padding-bottom: 0rem;}
         h2, h3, h4 {margin-top: 0px !important; margin-bottom: 4px !important; padding-top: 0px !important;}
         div[data-testid="stForm"] {padding: 5px;}
-        hr {margin-top: 5px !important; margin-bottom: 8px !important;}
         section[data-testid="stSidebar"] .block-container {padding-top: 1rem;}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 獨立函數：PUMP 計算 ---
+# --- 1. 統一計算函數 (參數已對齊：bw, ratio, flow) ---
 def calculate_pump_dose(bw, ratio, flow):
-    # 組套參數: (藥物係數, 體積基數)
     params = {
         "1:1": (0.6, 10), "1:2": (0.6, 5), "1:5": (6, 20), "1:10": (6, 10), 
         "1:20": (6, 5), "2:1": (0.6, 20), "5:1": (0.6, 50), "10:1": (0.6, 100)
@@ -28,6 +26,10 @@ def calculate_pump_dose(bw, ratio, flow):
     c_dose = (bw * d_fact) * (f_vol / v_base)
     k_dose = (c_dose / f_vol) * flow * 1000 / 60 / bw
     return f_vol, c_dose, k_dose
+
+# --- 2. 頁面框架 ---
+st.markdown("<h2 style='font-size:24px; margin:0;'>👶 NICU智慧計算機</h2>", unsafe_allow_html=True)
+st.write("---")
 
 # 頂部標題列
 col_title, col_sub = st.columns([2, 3])
@@ -724,52 +726,21 @@ with tab3:
 # =============================================================================
 with tab4:
     st.markdown("### 🔌 PUMP 總表115 - 自動流速與劑量計算")
-    
-    # 定義計算函數，確保變數只在內部有效
-    def calculate_pump(bw, drug, ratio, flow):
-        # 參數定義 (藥物係數, 體積基數)
-        pump_params = {
-            "1:1": (0.6, 10), "1:2": (0.6, 5), "1:5": (6, 20), "1:10": (6, 10), 
-            "1:20": (6, 5), "2:1": (0.6, 20), "5:1": (0.6, 50), "10:1": (0.6, 100)
-        }
-        if ratio not in pump_params: return None
-        
-        dose_factor, vol_base = pump_params[ratio]
-        f_vol = float(max(vol_base, math.ceil((flow * 24) / vol_base) * vol_base))
-        c_dose = (bw * dose_factor) * (f_vol / vol_base)
-        k_dose = (c_dose / f_vol) * flow * 1000 / 60 / bw
-        return f_vol, c_dose, k_dose
-
     if b1_bw > 0:
-        DRUG_LIMITS = {
-            "Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5),
-            "Norepinephrine": (0.02, 0.1), "Milrinone": (0.25, 0.75), 
-            "Fentanyl": (0.008, 0.05), "Morphine": (0.16, 0.83), 
-            "Midazolam": (0.5, 6.66), "Cisatracurium": (0.75, 11.5), "Rocuronium": (8, 17)
-        }
-        
+        DRUG_RANGES = {"Dopamine": (3, 10), "Dobutamine": (2, 20), "Epinephrine": (0.05, 0.5), "Norepinephrine": (0.02, 0.1), "Milrinone": (0.25, 0.75), "Fentanyl": (0.008, 0.05), "Morphine": (0.16, 0.83), "Midazolam": (0.5, 6.66), "Cisatracurium": (0.75, 11.5), "Rocuronium": (8, 17)}
         c1, c2 = st.columns(2)
-        s_drug = c1.selectbox("1. 藥物品項:", list(DRUG_LIMITS.keys()), key="p_drug_fixed")
+        s_drug = c1.selectbox("1. 藥物品項:", list(DRUG_RANGES.keys()), key="p_drug_fixed")
         s_ratio = c2.selectbox("2. PUMP 組套比例:", ["1:1", "1:2", "1:5", "1:10", "1:20", "2:1", "5:1", "10:1"], key="p_ratio_fixed")
-        st.info(f"📋 臨床範圍: **{DRUG_LIMITS[s_drug][0]} - {DRUG_LIMITS[s_drug][1]} mcg/kg/min**")
-        
-        i_flow = st.number_input("請輸入當前幫浦流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p_flow_fixed")
+        i_flow = st.number_input("輸入流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p_flow_fixed")
         
         if i_flow > 0:
-            result = calculate_pump(b1_bw, s_drug, s_ratio, i_flow)
-            if result:
-                f_vol, c_dose, k_dose = result
-                st.success(f"🔧 配置：抽取 {c_dose:.2f} mg 加入 D5W 至 {f_vol} mL")
-                is_out = (k_dose < DRUG_LIMITS[s_drug][0] or k_dose > DRUG_LIMITS[s_drug][1])
-                st.markdown(f"""
-                <div style='background-color: {"#3c1414" if is_out else "#1a1a1a"}; padding: 15px; border-radius: 8px;'>
-                    <p style='margin:0; font-size:16px;'>🎯 換算劑量 ({s_drug}):</p>
-                    <p style='margin:0; font-size:32px; font-weight:bold; color: {"#ff4444" if is_out else "#4CAF50"}'>{k_dose:.3f} <span style='font-size:18px; color:#fff;'>mcg/kg/min</span></p>
-                    {"<p style='color:#ff4444; font-weight:bold;'>⚠️ 警告：超出臨床建議範圍！</p>" if is_out else ""}
-                </div>
-                """, unsafe_allow_html=True)
-    else:
-        st.warning("⚠️ 請先於左側輸入「BW 體重」。")
+            # 這裡只傳入 3 個參數，與上方函數定義一致
+            f_vol, c_dose, k_dose = calculate_pump_dose(b1_bw, s_ratio, i_flow)
+            st.success(f"🔧 配置：抽取 {c_dose:.2f} mg 加入 D5W 至 {f_vol} mL")
+            min_r, max_r = DRUG_RANGES[s_drug]
+            is_out = (k_dose < min_r or k_dose > max_r)
+            st.markdown(f"<div style='background-color: {'#3c1414' if is_out else '#1a1a1a'}; padding: 15px; border-radius: 8px;'>🎯 換算劑量 ({s_drug}): <span style='font-size:32px; font-weight:bold; color: {'#ff4444' if is_out else '#4CAF50'}'>{k_dose:.3f} mcg/kg/min</span></div>", unsafe_allow_html=True)
+    else: st.warning("請先於左側輸入「BW 體重」。")
 # =============================================================================
 # TAB 5: Dexmedetomidine
 # =============================================================================
