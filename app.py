@@ -108,8 +108,7 @@ with tab1:
             with r1_c1:
                 with st.container(border=True):
                     st.markdown("## 🟥 **Ampicillin**")
-                    if ga_total_days <= 244:
-                        amp_b4 = b1_bw * 50 if l1_pna <= 7 else b1_bw * 75; amp_d4 = "Q12H"; norm_ok = True
+                    if ga_total_days <= 244: amp_b4 = b1_bw * 50 if l1_pna <= 7 else b1_bw * 75; amp_d4 = "Q12H"; norm_ok = True
                     else:
                         if l1_pna <= 28: amp_b4 = b1_bw * 50; amp_d4 = "Q8H"; norm_ok = True
                         else: amp_b4 = "超過28天(請手動確認)"; norm_ok = False
@@ -333,7 +332,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose / 換算後mL數:</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{pnt_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{pnt_ml:.1f} mL/dose</span></p>", unsafe_allow_html=True)
 
     elif category == "6. Seizure control":
-        if not has_input: st.info("💡 正在等待左側輸入病健基本資料...")
+        if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             sz_col1, sz_col2, _ = st.columns(3)
             with sz_col1:
@@ -362,7 +361,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose / 換算後mL數:</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sd_dose_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{sd_dose_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
 
     elif category == "8. Miscellaneous.GCSF":
-        if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
+        if not has_input: st.info("💡 正在等待左側輸入病健基本資料...")
         else:
             m_col1, m_col2, m_col3 = st.columns(3)
             with m_col1:
@@ -408,7 +407,7 @@ with tab1:
                     panto = 0.6 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:13px; color:#888;'>• Initail dose (Range 0.6-1.2mg/kg/day):</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{panto:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency:</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
-            with g_r1_c3:
+            with g_r3_c3:
                 with st.container(border=True):
                     st.markdown("## 🟩 **Esomeprazole(PO)**")
                     eso = 0.5 * b1_bw
@@ -521,7 +520,7 @@ with tab1:
                     st.markdown("<p style='margin:1px 0; font-size:13px; color:#888;'>• Frequency:</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
 
 # =============================================================================
-# TAB 2: Ion dosage (電解質元素暴露換算面板)
+# TAB 2: Ion dosage
 # =============================================================================
 with tab2:
     if not has_input:
@@ -536,14 +535,14 @@ with tab2:
                 st.caption("濃度規格: 100 mg/mL (IV) | 臨床範圍: 25 - 50 mg/kg/dose")
                 mgso4_base = 50.0 * b1_bw; mgso4_ml = mgso4_base / 100.0
                 st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議劑量 / 換算後mL數:</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mgso4_base:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>{mgso4_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
-                st.markdown("<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8-Q12H</p>", unsafe_allow_html=True)
+                st.markdown("<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0 0 2px 0; font-size: 16px; font-weight: bold; color: #F4511E;'>Q8-Q12H</p>", unsafe_allow_html=True)
         with ion_r1_c2:
             with st.container(border=True):
                 st.markdown("## 🟦 **Magnesium Oxide**")
                 st.caption("臨床範圍: 16.5 - 33.1 mg/kg/dose")
                 mg_oxide = 25.0 * b1_bw
                 st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議劑量:</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mg_oxide:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span></p>", unsafe_allow_html=True)
-                st.markdown("<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0; font-size: 16px; font-weight: bold; color: #F4511E;'>QID</p>", unsafe_allow_html=True)
+                st.markdown("<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0 0 2px 0; font-size: 16px; font-weight: bold; color: #F4511E;'>QID</p>", unsafe_allow_html=True)
 
         st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
         ion_r2_c1, _ = st.columns([2, 1])
@@ -597,7 +596,7 @@ with tab2:
         with ion_r4_c1:
             with st.container(border=True):
                 st.markdown("## 🧴 **All-right calcium suspension**")
-                st.caption("每 mL 常數基礎：含鈣 39.92 mg、磷 20.57 mg (鈣磷比 2:1) | 預設劑量: 2.5 mL/dose (QD)")
+                st.caption("每 mL 常數基礎：含鈣 39.92 mg、磷 20.57 mg (鈣磷比 2:1) | 建議劑量: 2.5 mL/dose (QD)")
                 st.markdown("<p style='color:#64B5F6; font-size:12px; margin:0;'>🟦 劑量換算器：請輸入預開立之使用劑量 (mL/dose)</p>", unsafe_allow_html=True)
                 c16_input = st.number_input("輸入使用劑量 (mL/dose)", min_value=0.0, max_value=50.0, value=2.5, step=0.5, key="c16_calc", label_visibility="collapsed")
                 f16_ca = (c16_input * 39.92) / b1_bw; i16_p = (20.57 * c16_input) / b1_bw; m16_d3 = 160.0 * c16_input; p16_vitA = (1600.0 * c16_input) / b1_bw
@@ -612,7 +611,7 @@ with tab2:
                 """, unsafe_allow_html=True)
 
 # =============================================================================
-# 🎯 TAB 3: DART.BURST (全面依據 image_231db0.png 正式激活！)
+# TAB 3: DART.BURST
 # =============================================================================
 with tab3:
     if not has_input:
@@ -620,18 +619,12 @@ with tab3:
     else:
         st.markdown("<p style='color:#ffb300; font-weight:bold; font-size:14px; margin-bottom:10px;'>📊 系統核對模式：全功能已依據病患體重同步演算，單行直槓並排以極致壓縮視覺空間。</p>", unsafe_allow_html=True)
         
-        # 三大 BPD 類固醇療程：橫向並排三欄呈現 (極致美觀、防呆核對)
         bpd_col1, bpd_col2, bpd_col3 = st.columns(3)
-        
-        # 1. Burst (BPD burst)----Prednisolone
         with bpd_col1:
             with st.container(border=True):
                 st.markdown("## 🟥 **Burst (BPD burst) — Prednisolone**")
                 st.markdown("---")
-                
-                # Formula: Dose = 1 * B1
                 burst_dose = 1.0 * b1_bw
-                
                 st.markdown(f"""
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage I</b> (1mg/kg/dose Q6H 2 days):</p>
                 <p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
@@ -639,14 +632,12 @@ with tab3:
                     <span style='color:#F4511E; font-size:16px;'>Q6H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#4CAF50; font-size:16px;'>2 days</span>
                 </p>
-                
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage II</b> (1mg/kg/dose Q12H 2 days):</p>
                 <p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
                     {burst_dose:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#F4511E; font-size:16px;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#4CAF50; font-size:16px;'>2 days</span>
                 </p>
-                
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage III</b> (1mg/kg/dose QD 2 days):</p>
                 <p style='margin:0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
                     {burst_dose:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
@@ -654,20 +645,12 @@ with tab3:
                     <span style='color:#4CAF50; font-size:16px;'>2 days</span>
                 </p>
                 """, unsafe_allow_html=True)
-                st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True) # 高度對齊
-                
-        # 2. Dart (Dexamethasone)
+                st.markdown("<div style='height:44px;'></div>", unsafe_allow_html=True)
         with bpd_col2:
             with st.container(border=True):
                 st.markdown("## 🟦 **Dart (Dexamethasone)**")
                 st.markdown("---")
-                
-                # Dexamethasone 劑量極微，全線採用 :.3f 精準渲染
-                dart_s1 = 0.075 * b1_bw
-                dart_s2 = 0.05 * b1_bw
-                dart_s3 = 0.025 * b1_bw
-                dart_s4 = 0.01 * b1_bw
-                
+                dart_s1 = 0.075 * b1_bw; dart_s2 = 0.05 * b1_bw; dart_s3 = 0.025 * b1_bw; dart_s4 = 0.01 * b1_bw
                 st.markdown(f"""
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage I</b> (0.15mg/kg/day 3 days):</p>
                 <p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
@@ -675,21 +658,18 @@ with tab3:
                     <span style='color:#F4511E; font-size:16px;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#4CAF50; font-size:16px;'>3 days</span>
                 </p>
-                
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage II</b> (0.1mg/kg/day 3 days):</p>
                 <p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
                     {dart_s2:.3f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#F4511E; font-size:16px;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#4CAF50; font-size:16px;'>3 days</span>
                 </p>
-                
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage III</b> (0.05mg/kg/day 2 days):</p>
                 <p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
                     {dart_s3:.3f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#F4511E; font-size:16px;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#4CAF50; font-size:16px;'>2 days</span>
                 </p>
-                
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage IV</b> (0.02mg/kg/day 2 days):</p>
                 <p style='margin:0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
                     {dart_s4:.3f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
@@ -697,46 +677,109 @@ with tab3:
                     <span style='color:#4CAF50; font-size:16px;'>2 days</span>
                 </p>
                 """, unsafe_allow_html=True)
-                
-        # 3. STOP-BPD protocol (Hydrocortisone)
         with bpd_col3:
             with st.container(border=True):
                 st.markdown("## 🟩 **STOP-BPD protocol (Hydrocortisone)**")
                 st.markdown("---")
-                
-                # Formula: Dose = 0.5 * B1 for both stages
                 hydro_dose = 0.5 * b1_bw
-                
                 st.markdown(f"""
-                <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage I</b> (1mg/kg/day Q12H for 7 days):</p>
-                <p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
-                    {hydro_dose:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
+                <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage I</b> (1 mg/kg/day Q12h 7 days):</p>
+                <p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#F4511E; font-size:16px;'>Q12H</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#4CAF50; font-size:16px;'>7 days</span>
                 </p>
-                
                 <p style='margin:1px 0; font-size:14px; color:#888;'>• <b>Stage II</b> (0.5mg/kg/day QD for 3 days):</p>
-                <p style='margin:0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
-                    {hydro_dose:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
+                <p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#F4511E; font-size:16px;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
                     <span style='color:#4CAF50; font-size:16px;'>3 days</span>
                 </p>
                 """, unsafe_allow_html=True)
-                st.markdown("<div style='height:144px;'></div>", unsafe_allow_html=True) # 高度對齊
+                st.markdown("<div style='height:144px;'></div>", unsafe_allow_html=True)
 
 # =============================================================================
-# 其餘大分頁暫留
+# TAB 4: PUMP 總表115
 # =============================================================================
-with tab4: st.info("⏳ PUMP 總表115 微流速調配模組建構中...")
-with tab5: st.info("⏳ Dexmedetomidine 單一用藥臨床指引建構中...")
+with tab4: 
+    st.info("⏳ PUMP 總表115 微流速調配模組建構中...")
+
+# =============================================================================
+# 🎯 TAB 5: Dexmedetomidine (依據新上傳 image_2391cf.png 完美對接！)
+# =============================================================================
+with tab5:
+    if not has_input:
+        st.warning("⚠️ 請先於左側輸入「BW 體重」，系統將即時啟動 Dexmedetomidine 稀釋流速核算面板。")
+    else:
+        st.markdown("<h3 style='margin:0px 0px 10px 0px;'>💤 Dexmedetomidine 四種配方濃度流速與劑量換算器</h3>", unsafe_allow_html=True)
+        
+        # --- 4 種稀釋配方橫向 2x2 並排呈現（激省垂直空間，視覺焦點集中） ---
+        dex_r1_c1, dex_r1_c2 = st.columns(2)
+        
+        # 配方一：20 mcg/mL (5 mL)
+        with dex_r1_c1:
+            with st.container(border=True):
+                st.markdown("### 🧪 **配方一：1 mL in NS 5 mL** &nbsp;&nbsp;`(20 mcg/mL)`")
+                d1_min = b1_bw * 0.01
+                d1_max = b1_bw * 0.07
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間 (0.2-1.4 mcg/kg/hr):</p><p style='margin:0 0 10px 0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{d1_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d1_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                # 獨立流速互動核對
+                j2_val = st.number_input("請輸入配方一設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d1_min, 3)) if d1_min > 0 else 0.0, step=0.01, key="j2_flow")
+                l2_dose = (100.0 / 5.0 * j2_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{l2_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
+
+        # 配方二：12 mcg/mL (8.333 mL)
+        with dex_r1_c2:
+            with st.container(border=True):
+                st.markdown("### 🧪 **配方二：1 mL in NS 8.333 mL** &nbsp;&nbsp;`(12 mcg/mL)`")
+                d2_min = b1_bw * 0.0166
+                d2_max = b1_bw * 0.116
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間:</p><p style='margin:0 0 10px 0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{d2_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d2_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                j3_val = st.number_input("請輸入配方二設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d2_min, 3)) if d2_min > 0 else 0.0, step=0.01, key="j3_flow")
+                l3_dose = (100.0 / 8.333 * j3_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{l3_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
+
+        st.write("<div style='height:4px;'></div>", unsafe_allow_html=True)
+        dex_r2_c1, dex_r2_c2 = st.columns(2)
+        
+        # 配方三：8 mcg/mL (12.5 mL)
+        with dex_r2_c1:
+            with st.container(border=True):
+                st.markdown("### 🧪 **配方三：1 mL in NS 12.5 mL** &nbsp;&nbsp;`(8 mcg/mL)`")
+                d3_min = b1_bw * 0.025
+                d3_max = b1_bw * 0.175
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間:</p><p style='margin:0 0 10px 0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{d3_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d3_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                j4_val = st.number_input("請輸入配方三設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d3_min, 3)) if d3_min > 0 else 0.0, step=0.01, key="j4_flow")
+                l4_dose = (100.0 / 12.5 * j4_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{l4_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
+
+        # 🌟 配方四：4 mcg/mL (25 mL) — 💡 依據要求：加框與高彩標註「最建議配方」
+        with dex_r2_c2:
+            st.markdown(
+                """
+                <div style='background-color: #2b2214; padding: 2px 10px; border-radius: 4px 4px 0 0; border-left: 4px solid #ffb300; border-top: 1px solid #ffb300; border-right: 1px solid #ffb300;'>
+                    <span style='color: #ffb300; font-weight: bold; font-size: 13px;'>🌟 臨床最推薦調配配方 (流速操作範圍最安全)</span>
+                </div>
+                """, unsafe_allow_html=True
+            )
+            with st.container(border=True):
+                st.markdown("### 🌟 **配方四：1 mL in NS 25 mL** &nbsp;&nbsp;`(4 mcg/mL)`")
+                d4_min = b1_bw * 0.05
+                d4_max = b1_bw * 0.35
+                st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 建議流速區間 (安全操作空間大):</p><p style='margin:0 0 10px 0; font-size: 19px; font-weight: bold; color: #ffb300;'>{d4_min:.3f} mL/hr &nbsp;<span style='color:#555; font-weight:normal;'>~</span>&nbsp; {d4_max:.3f} mL/hr</p>", unsafe_allow_html=True)
+                
+                j5_val = st.number_input("請輸入配方四設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=float(round(d4_min, 3)) if d4_min > 0 else 0.0, step=0.01, key="j5_flow")
+                l5_dose = (100.0 / 25.0 * j5_val) / b1_bw if b1_bw > 0 else 0.0
+                st.markdown(f"<p style='margin:5px 0 0 0; font-size:14px; color:#ccc;'>🧮 換算後流速劑量：</p><p style='margin:0; font-size: 24px; font-weight: bold; color: #ffb300;'>{l5_dose:.3f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
 
 # --- 底部專業版權宣告 ---
 st.write("---")
 st.markdown(
     """
     <div style='text-align: center; color: #888888; font-size: 12px; line-height: 1.6;'>
-        🔒 <b>臨床決策支援系統 (CDSS) 免責宣告</b>：本工具計算結果僅供醫療專業人員參考核對，處方開立仍應以臨床實際病情與主治醫師之最終判斷為準。<br>
-        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務組 張運佳藥師 所有 請勿隨意轉傳</b>
+        🔒 <b>臨床決策支援系統 (CDSS) 免責宣告</b>：本工具計算結果僅供醫療專業人員參考核對，處方開立仍應以臨床實際病情與主治醫師之最終判盤為準。<br>
+        <b>版權為中國醫藥大學附設醫院藥劑部 臨床藥學科 臨床服務組 張運佳藥師 所有 <span style='color: #ff8a80; font-weight: bold;'>請勿隨意轉傳</span></b>
     </div>
     """, 
     unsafe_allow_html=True
