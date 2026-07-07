@@ -661,39 +661,19 @@ with tab4:
 # =============================================================================
 with tab5:
     st.markdown("### 💤 Dexmedetomidine")
-if b1_bw > 0:
+    if b1_bw > 0:
         st.markdown("### 💤 Dexmedetomidine 四種配方濃度流速與劑量換算器")
-        d1_min, d1_max = b1_bw * 0.01, b1_bw * 0.07
-        d2_min, d2_max = b1_bw * 0.0166, b1_bw * 0.116
-        d3_min, d3_max = b1_bw * 0.025, b1_bw * 0.175
-        d4_min, d4_max = b1_bw * 0.05, b1_bw * 0.35
-        
+        d1_min, d2_min, d3_min, d4_min = b1_bw * 0.01, b1_bw * 0.0166, b1_bw * 0.025, b1_bw * 0.05
         col_dex1, col_dex2 = st.columns(2)
-        # 配方一
         with col_dex1:
-            j2 = st.number_input("配方一 (20 mcg/mL, 5mL) 流速 (mL/hr):", min_value=0.0, value=d1_min, step=0.01, key="dex1")
-            dose1 = (100.0 / 5.0 * j2) / b1_bw
-            st.write(f"當前劑量: {dose1:.3f} mcg/kg/hr")
-        # 配方二
+            j2 = st.number_input("配方一 (20 mcg/mL) 流速 (mL/hr):", value=d1_min, step=0.01, key="dex1")
+            st.write(f"當前劑量: {(100.0 / 5.0 * j2) / b1_bw:.3f} mcg/kg/hr")
         with col_dex2:
-            j3 = st.number_input("配方二 (12 mcg/mL, 8.33mL) 流速 (mL/hr):", min_value=0.0, value=d2_min, step=0.01, key="dex2")
-            dose2 = (100.0 / 8.333 * j3) / b1_bw
-            st.write(f"當前劑量: {dose2:.3f} mcg/kg/hr")
-        # 配方三
-        col_dex3, col_dex4 = st.columns(2)
-        with col_dex3:
-            j4 = st.number_input("配方三 (8 mcg/mL, 12.5mL) 流速 (mL/hr):", min_value=0.0, value=d3_min, step=0.01, key="dex3")
-            dose3 = (100.0 / 12.5 * j4) / b1_bw
-            st.write(f"當前劑量: {dose3:.3f} mcg/kg/hr")
-        # 配方四
-        with col_dex4:
-            j5 = st.number_input("配方四 (4 mcg/mL, 25mL) 流速 (mL/hr):", min_value=0.0, value=d4_min, step=0.01, key="dex4")
-            dose4 = (100.0 / 25.0 * j5) / b1_bw
-            st.write(f"當前劑量: {dose4:.3f} mcg/kg/hr")
+            j3 = st.number_input("配方二 (12 mcg/mL) 流速 (mL/hr):", value=d2_min, step=0.01, key="dex2")
+            st.write(f"當前劑量: {(100.0 / 8.333 * j3) / b1_bw:.3f} mcg/kg/hr")
     else:
         st.warning("⚠️ 請先於左側輸入「BW 體重」。")
     st.write("Dex 計算模組已啟用")
 
-# --- 頁尾 ---
 st.write("---")
 st.markdown("🔒 版權為中國醫藥大學附設醫院藥劑部所有")
