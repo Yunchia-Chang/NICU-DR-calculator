@@ -100,11 +100,12 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # TAB 1: 常用藥物計算機 (分類 1 ~ 9)
 # =============================================================================
 with tab1:
-    st.markdown(f"<h3 style='margin:0px 0px 10px 0px;'>📂 當前分類：{category}</h3>", unsafe_allow_html=True)
-    
-    if category == "1. Antimicrobial agents":
-        if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
-        else:
+    if not has_input:
+        st.info("💡 正在等待左側輸入病患基本資料...")
+    else:
+        st.markdown(f"<h3 style='margin:0px 0px 10px 0px;'>📂 當前分類：{category}</h3>", unsafe_allow_html=True)
+        
+        if category == "1. Antimicrobial agents":
             r1_c1, r1_c2, r1_c3 = st.columns(3)
             with r1_c1:
                 with st.container(border=True):
