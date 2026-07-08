@@ -693,11 +693,17 @@ with tab3:
                 st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
 
 # =============================================================================
-# 🔌 TAB 4: PUMP 總表115 —— 頂格靠左，徹底切分
+# 🔌 TAB 4: PUMP 總表115 —— 狀態永久鎖定、資訊絕不亂跑版
 # =============================================================================
 with tab4:
     st.markdown("### 🔌 PUMP 總表115 - 多配方動態演算面板")
     
+    # 📥 核心安全鎖：如果記憶庫裡還沒有這兩個數值，就初始化它們，確保預設是 Dopamine
+    if "fixed_drug_p4" not in st.session_state:
+        st.session_state["fixed_drug_p4"] = "Dopamine"
+    if "fixed_flow_p4" not in st.session_state:
+        st.session_state["fixed_flow_p4"] = 0.5
+        
     # 1. 臨床常用重症藥物劑量參考範圍 (Range)
     with st.container(border=True):
         st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#64B5F6;'>📋 臨床常用重症藥物劑量參考範圍 (Range)</p>", unsafe_allow_html=True)
@@ -731,21 +737,42 @@ with tab4:
     st.write("<div style='height:8px;'></div>", unsafe_allow_html=True)
 
     if has_input:
-        # 2. 核心品項選擇與流速輸入
+        # 2. 核心品項選擇與流速輸入 —— 🛠️ 這裡改用 session_state 綁定，徹底杜絕亂跑！
         p4_c1, p4_c2 = st.columns([2, 2])
+        
+        # 找出當前儲存的藥物在清單中的位置，防止 reset
+        drug_list = ["Dopamine", "Dobutamine", "Epinephrine", "Norepinephrine", "Milrinone", "Fentanyl", "Morphine", "Midazolam", "Cisatracurium", "Rocuronium"]
+        try:
+            default_index = drug_list.index(st.session_state["fixed_drug_p4"])
+        except ValueError:
+            default_index = 0
+            
         with p4_c1:
             s_drug_p4 = st.selectbox(
                 "💉 選擇計算藥物品項：", 
-                ["Dopamine", "Dobutamine", "Epinephrine", "Norepinephrine", "Milrinone", "Fentanyl", "Morphine", "Midazolam", "Cisatracurium", "Rocuronium"],
-                key="p4_drug_select_final_version"
+                drug_list,
+                index=default_index,
+                key="p4_drug_selectbox_widget"
             )
+            # 即時將最新選擇存入記憶庫
+            st.session_state["fixed_drug_p4"] = s_drug_p4
+            
         with p4_c2:
-            i_flow_p4 = st.number_input("🔌 請輸入目前幫浦設定流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p4_flow_input_final_version")
+            i_flow_p4 = st.number_input(
+                "🔌 請輸入目前幫浦設定流速 (mL/hr):", 
+                min_value=0.0, 
+                value=st.session_state["fixed_flow_p4"], 
+                step=0.1, 
+                key="p4_flow_input_widget"
+            )
+            # 即時將最新流速存入記憶庫
+            st.session_state["fixed_flow_p4"] = i_flow_p4
             
         st.write("---")
         st.markdown(f"#### 🎯 當前藥物：<span style='color:#1E88E5;'>{s_drug_p4}</span> | 設定流速：<span style='color:#4CAF50;'>{i_flow_p4:.1f} mL/hr</span>", unsafe_allow_html=True)
         
         if i_flow_p4 > 0:
+            # (💡 底下的 --- 比例 1:1 --- 一直到比例 10:1 的公式，請完全維持原樣，不需要變動！)
             # --- 比例 1:1 ---
             f_1 = float(max(10.0, math.ceil((i_flow_p4 * 24) / 10.0) * 10.0))
             c_1 = (b1_bw * 0.6) * (f_1 / 10.0)
