@@ -46,7 +46,7 @@ pma_total_days = ga_total_days + l1_pna
 q1_pma_wk = pma_total_days // 7
 s1_pma_day = pma_total_days % 7
 
-# 側邊欄：常用藥物大項
+# --- 側邊欄：常用藥物大項 ---
 st.sidebar.write("---")
 st.sidebar.header("📁 藥物類別選擇")
 category = st.sidebar.radio(
@@ -61,7 +61,8 @@ category = st.sidebar.radio(
         "7. Sedation",
         "8. Miscellaneous.GCSF",
         "9. 胃腸類藥品/營養補充品/維他命/其它"
-    ]
+    ],
+    key="nicu_main_category"  # 👈 核心防線：強迫 Streamlit 記住這個側邊欄的狀態，切換頁籤時絕對不准重置！
 )
 
 # --- 📊 當前病患生理指標核對 ---
@@ -97,25 +98,26 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 ])
 
 # =============================================================================
-# TAB 1: 常用藥物計算機 (分類 1 ~ 9) —— 結構徹底分流解耦版
+# TAB 1: 常用藥物計算機 (分類 1 ~ 9)
 # =============================================================================
 with tab1:
-    # 🚨 第一道防線：如果沒輸入，直接在這裡卡死，並且不准執行任何後續分類！
     if not has_input:
         st.info("💡 正在等待左側輸入病患基本資料...")
-        
-    # 🚨 第二道防線：只有「有輸入」且「上方選定常用藥物分頁」時，才啟動 1~9 分類
-    if has_input:
+    else:
+        # 顯示當前分類
         st.markdown(f"<h3 style='margin:0px 0px 10px 0px;'>📂 當前分類：{category}</h3>", unsafe_allow_html=True)
         
-        # ---------------------------------------------------------------------
-        # 分類 1: Antimicrobial agents
-        # ---------------------------------------------------------------------
-        if category == "1. Antimicrobial agents":
-            r1_c1, r1_c2, r1_c3 = st.columns(3)
-            with r1_c1:
-                with st.container(border=True):
-                    st.markdown("## 🟥 **Ampicillin**")
+        # 只有在滿足這個 if 的大前提下，底下的抗生素、利尿劑卡片才准顯示
+        if has_input: 
+            
+            # ---------------------------------------------------------------------
+            # 分類 1: Antimicrobial agents
+            # ---------------------------------------------------------------------
+            if category == "1. Antimicrobial agents":
+                r1_c1, r1_c2, r1_c3 = st.columns(3)
+                with r1_c1:
+                    with st.container(border=True):
+                        st.markdown("## 🟥 **Ampicillin**")
                     if ga_total_days <= 244:
                         amp_b4 = b1_bw * 50 if l1_pna <= 7 else b1_bw * 75; amp_d4 = "Q12H"; norm_ok = True
                     else:
