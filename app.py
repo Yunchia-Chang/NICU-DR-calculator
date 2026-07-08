@@ -677,11 +677,113 @@ with tab3:
                 st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage II</b> (0.5mg/kg/day QD for 3 days):</p>", unsafe_allow_html=True)
                 st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
 # =============================================================================
-# TAB 4: PUMP 總表115
+# 🔌 TAB 4: PUMP 總表115 (Excel 公式全開與圖 2 直線質感優化版)
 # =============================================================================
-with tab4: 
-    st.info("⏳ PUMP 總表115 模組建構中...")
+with tab4:
+    st.markdown("### 🔌 PUMP 總表115 - 多配方動態演算面板")
+    
+    # 1. 整合臨床參考劑量對照表 (比照圖 2 規格排版)
+    with st.container(border=True):
+        st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#64B5F6;'>📋 臨床常用重症藥物劑量參考範圍 (Range)</p>", unsafe_allow_html=True)
+        rc1, rc2, rc3 = st.columns(3)
+        with rc1:
+            st.markdown("""
+            <div style='font-size:12px; color:#ccc; line-height:1.6;'>
+            • <b>Dopamine</b>: 3 - 10 mcg/kg/min<br>
+            • <b>Dobutamine</b>: 2 - 20 mcg/kg/min<br>
+            • <b>Epinephrine</b>: 0.05 - 0.5 mcg/kg/min
+            </div>
+            """, unsafe_allow_html=True)
+        with rc2:
+            st.markdown("""
+            <div style='font-size:12px; color:#ccc; line-height:1.6;'>
+            • <b>Norepinephrine</b>: 0.02 - 0.1 mcg/kg/min (⚠️最濃 2:1)<br>
+            • <b>Milrinone</b>: 0.25 - 0.75 mcg/kg/min<br>
+            • <b>Fentanyl</b>: 0.008 - 0.05 mcg/kg/min
+            </div>
+            """, unsafe_allow_html=True)
+        with rc3:
+            st.markdown("""
+            <div style='font-size:12px; color:#ccc; line-height:1.6;'>
+            • <b>Morphine</b>: 0.16 - 0.83 mcg/kg/min<br>
+            • <b>Midazolam</b>: 0.5 - 6.66 mcg/kg/min<br>
+            • <b>Cisatracurium</b>: 0.75 - 11.5 mcg/kg/min<br>
+            • <b>Rocuronium</b>: 8 - 17 mcg/kg/min
+            </div>
+            """, unsafe_allow_html=True)
 
+    st.write("<div style='height:8px;'></div>", unsafe_allow_html=True)
+
+    if has_input:
+        # 2. 核心品項選擇與流速輸入 (加入獨立鎖定 key)
+        p4_c1, p4_c2 = st.columns([2, 2])
+        with p4_c1:
+            s_drug_p4 = st.selectbox(
+                "💉 選擇計算藥物品項：", 
+                ["Dopamine", "Dobutamine", "Epinephrine", "Norepinephrine", "Milrinone", "Fentanyl", "Morphine", "Midazolam", "Cisatracurium", "Rocuronium"],
+                key="p4_drug_select_fixed"
+            )
+        with p4_c2:
+            i_flow_p4 = st.number_input("🔌 請輸入目前幫浦設定流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p4_flow_input_fixed")
+            
+        st.write("---")
+        st.markdown(f"#### 🎯 當前藥物：<span style='color:#1E88E5;'>{s_drug_p4}</span> | 設定流速：<span style='color:#4CAF50;'>{i_flow_p4:.1f} mL/hr</span> (以下為 8 種組套同步演算結果)", unsafe_allow_html=True)
+        
+        if i_flow_p4 > 0:
+            # 3. 建立 8 種比例的常數與公式對照字典 (依據 Excel 規則)
+            # 格式: "比例": (Dose常數倍率, CEILING常數, 是否為超濃比例)
+            ratios_config = {
+                "1:1": (0.6, 10, False),
+                "1:2": (0.6, 5, False),
+                "1:5": (6.0, 20, False),
+                "1:10": (6.0, 10, False),
+                "1:20": (6.0, 5, False),
+                "2:1": (0.6, 20, False),
+                "5:1": (0.6, 50, True),   # 超過 2:1 的極限高濃度比例
+                "10:1": (0.6, 100, True)  # 超過 2:1 的極限高濃度比例
+            }
+            
+            # 逐行渲染 8 種組套結果
+            for r_name, (d_mult, ceil_val, is_ultra_dense) in ratios_config.items():
+                # 🛠️ 轉譯 Excel 物理演算法
+                # 體重對應 b1_bw，流速對應 i_flow_p4
+                f_vol = float(max(ceil_val, math.ceil((i_flow_p4 * 24) / ceil_val) * ceil_val))
+                c_dose = (b1_bw * d_mult) * (f_vol / ceil_val)
+                k_dose = (c_dose / f_vol) * i_flow_p4 * 1000 / 60 / b1_bw
+                
+                # 🚨 CDSS 安全防呆機制：若為 Norepinephrine 且濃度高於 2:1
+                is_norepi_danger = (s_drug_p4 == "Norepinephrine" and is_ultra_dense)
+                
+                # 定義這檔配方的複製文字
+                copy_text = f"抽取 {s_drug_p4} {c_dose:.2f} mg 加入 D5W 至 {f_vol:.0f} mL"
+                
+                # 4. 外觀排版：完美復刻圖 2 直線質感，一鍵複製機制
+                with st.container():
+                    # 依據風險狀態調整底色與邊框
+                    bg_color = "#3c1414" if is_norepi_danger else "#13171a"
+                    border_color = "#ff4444" if is_norepi_danger else "#1E88E5"
+                    
+                    st.markdown(f"""
+                    <div style='background-color: {bg_color}; padding: 10px 14px; border-radius: 4px; border-left: 4px solid {border_color}; margin-bottom: 6px;'>
+                        <span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 ({r_name})</span>
+                        <p style='margin:4px 0 0 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
+                            {c_dose:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> 
+                            &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
+                            D5W 至 {f_vol:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> 
+                            &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
+                            <span style='color:#4CAF50;'>{k_dose:.3f} mcg/kg/min</span>
+                        </p>
+                        {"<p style='margin:4px 0 0 0; color:#ff4444; font-size:12px; font-weight:bold;'>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>" if is_norepi_danger else ""}
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # 提供一鍵點擊複製完整處方文字，符合臨床快速輸入習慣
+                    st.code(copy_text, language="text")
+                    st.write("<div style='height:2px;'></div>", unsafe_allow_html=True)
+        else:
+            st.info("💡 請輸入大於 0 的帮浦流速開始即時演算。")
+    else:
+        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動解鎖 8 大組套全開列表。")
 # =============================================================================
 # TAB 5: Dexmedetomidine
 # =============================================================================
