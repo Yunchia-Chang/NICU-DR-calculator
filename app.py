@@ -686,6 +686,7 @@ with tab3:
                 
                 st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage II</b> (0.5mg/kg/day QD for 3 days):</p>", unsafe_allow_html=True)
                 st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
+
 # =============================================================================
 # 🔌 TAB 4: PUMP 總表115 (完全攤平、徹底消滅 NameError 終極版)
 # =============================================================================
@@ -808,6 +809,7 @@ with tab4:
             st.info("💡 請輸入大於 0 的幫浦流速開始即時演算。")
     else:
         st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動解鎖 8 大組套全開列表。")
+        
 # =============================================================================
 # TAB 5: Dexmedetomidine
 # =============================================================================
