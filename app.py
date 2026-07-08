@@ -29,7 +29,7 @@ with col_sub:
 st.write("---")
 
 # --- 側邊欄：基本資料輸入 ---
-st.sidebar.header("📥 病健基本資料輸入")
+st.sidebar.header("📥 病童基本資料輸入")
 b1_bw = st.sidebar.number_input("BW 體重 (kg)", min_value=0.0, max_value=10.0, value=0.0, step=0.1)
 
 st.sidebar.write("---")
