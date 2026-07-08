@@ -97,14 +97,20 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 ])
 
 # =============================================================================
-# TAB 1: 常用藥物計算機 (分類 1 ~ 9)
+# TAB 1: 常用藥物計算機 (分類 1 ~ 9) —— 結構徹底分流解耦版
 # =============================================================================
 with tab1:
+    # 🚨 第一道防線：如果沒輸入，直接在這裡卡死，並且不准執行任何後續分類！
     if not has_input:
         st.info("💡 正在等待左側輸入病患基本資料...")
-    else:
+        
+    # 🚨 第二道防線：只有「有輸入」且「上方選定常用藥物分頁」時，才啟動 1~9 分類
+    if has_input:
         st.markdown(f"<h3 style='margin:0px 0px 10px 0px;'>📂 當前分類：{category}</h3>", unsafe_allow_html=True)
         
+        # ---------------------------------------------------------------------
+        # 分類 1: Antimicrobial agents
+        # ---------------------------------------------------------------------
         if category == "1. Antimicrobial agents":
             r1_c1, r1_c2, r1_c3 = st.columns(3)
             with r1_c1:
@@ -254,7 +260,7 @@ with tab1:
                     mnt_iop_g = 1.5 * b1_bw; mnt_iop_ml = mnt_iop_g / 0.2
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• IOP(1.5g/kg) / 換算後mL數:</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{mnt_iop_g:.2f} <span style='font-size:12px; color:#fff;'>g/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{mnt_iop_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
 
-    elif category == "3. PDA":
+    if category == "3. PDA":
         if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             pda_col1, pda_col2, pda_col3 = st.columns(3)
@@ -281,7 +287,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Standard dose / 換算後mL數:</p><p style='margin:0 0 10px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{ace_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{ace_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q6H</p>", unsafe_allow_html=True)
 
-    elif category == "4. 肺高壓":
+    if category == "4. 肺高壓":
         if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             ph_col1, ph_col2, ph_col3 = st.columns(3)
@@ -307,7 +313,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose(Range:0.5-2mcg/kg) (0.5mcg/kg):</p><p style='margin:0 0 10px 0; font-size: 21px; font-weight: bold; color: #64B5F6;'>{ilo_dose:.2f} <span style='font-size:13px; color:#ff8a80; font-weight:bold;'>mcg/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q4H</p>", unsafe_allow_html=True)
 
-    elif category == "5. Apnea/RDS Surfactant":
+    if category == "5. Apnea/RDS Surfactant":
         if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             ap_col1, ap_col2, ap_col3 = st.columns(3)
@@ -344,7 +350,7 @@ with tab1:
                     pnt_mg = 200.0 * b1_bw; pnt_ml = 2.5 * b1_bw
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose / 換算後mL數:</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{pnt_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{pnt_ml:.1f} mL/dose</span></p>", unsafe_allow_html=True)
 
-    elif category == "6. Seizure control":
+    if category == "6. Seizure control":
         if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             sz_col1, sz_col2, _ = st.columns(3)
@@ -365,7 +371,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Maintenance (PO.IV) / 換算後mL數:</p><p style='margin:0 0 8px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sz_maint:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{sz_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>Q12H</p>", unsafe_allow_html=True)
 
-    elif category == "7. Sedation":
+    if category == "7. Sedation":
         if not has_input: st.info("💡 正在等待左側輸入病健基本資料...")
         else:
             sd_col1, _, _ = st.columns(3)
@@ -375,7 +381,7 @@ with tab1:
                     sd_dose_mg = 25.0 * b1_bw; sd_dose_ml = sd_dose_mg / 100.0
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Dose / 換算後mL數:</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{sd_dose_mg:.1f} <span style='font-size:12px; color:#fff;'>mg/dose</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{sd_dose_ml:.2f} mL/dose</span></p>", unsafe_allow_html=True)
 
-    elif category == "8. Miscellaneous.GCSF":
+    if category == "8. Miscellaneous.GCSF":
         if not has_input: st.info("💡 正在等待左側輸入病健基本資料...")
         else:
             m_col1, m_col2, m_col3 = st.columns(3)
@@ -406,7 +412,7 @@ with tab1:
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Neutropenia with sepsis(10mcg/kg/dose):</p><p style='margin:0 0 8px 0; font-size: 21px; font-weight: bold; color: #1E88E5;'>{fil_dose:.1f} <span style='font-size:13px; color:#fff;'>mcg</span></p>", unsafe_allow_html=True)
                     st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Frequency:</p><p style='margin:0 0 2px 0; font-size: 18px; font-weight: bold; color: #F4511E;'>QD</p>", unsafe_allow_html=True)
 
-    elif category == "9. 胃腸類藥品/營養補充品/維他命/其它":
+    if category == "9. 胃腸類藥品/營養補充品/維他命/其它":
         if not has_input: st.info("💡 正在等待左側輸入病患基本資料...")
         else:
             g_r1_c1, g_r1_c2, g_r1_c3 = st.columns(3)
