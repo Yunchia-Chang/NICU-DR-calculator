@@ -1,6 +1,6 @@
 Python
 import streamlit as st
-import math  # 👈 就是漏了這一行！請補上它，Bug 就消滅了！
+import math  
 
 # --- 網頁外觀設定 ---
 st.set_page_config(
