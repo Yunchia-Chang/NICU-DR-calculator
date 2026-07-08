@@ -677,7 +677,7 @@ with tab3:
                 st.markdown("<p style='margin:8px 0 2px 0; font-size:13px; color:#888;'>• <b>Stage II</b> (0.5mg/kg/day QD for 3 days):</p>", unsafe_allow_html=True)
                 st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
 # =============================================================================
-# 🔌 TAB 4: PUMP 總表115 (完全修正 NameError 穩定版)
+# 🔌 TAB 4: PUMP 總表115 (完全攤平、徹底消滅 NameError 終極版)
 # =============================================================================
 with tab4:
     st.markdown("### 🔌 PUMP 總表115 - 多配方動態演算面板")
@@ -721,62 +721,79 @@ with tab4:
             s_drug_p4 = st.selectbox(
                 "💉 選擇計算藥物品項：", 
                 ["Dopamine", "Dobutamine", "Epinephrine", "Norepinephrine", "Milrinone", "Fentanyl", "Morphine", "Midazolam", "Cisatracurium", "Rocuronium"],
-                key="p4_drug_select_fixed"
+                key="p4_drug_select_final_version"
             )
         with p4_c2:
-            i_flow_p4 = st.number_input("🔌 請輸入目前幫浦設定流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p4_flow_input_fixed")
+            i_flow_p4 = st.number_input("🔌 請輸入目前幫浦設定流速 (mL/hr):", min_value=0.0, value=0.5, step=0.1, key="p4_flow_input_final_version")
             
         st.write("---")
         st.markdown(f"#### 🎯 當前藥物：<span style='color:#1E88E5;'>{s_drug_p4}</span> | 設定流速：<span style='color:#4CAF50;'>{i_flow_p4:.1f} mL/hr</span>", unsafe_allow_html=True)
         
         if i_flow_p4 > 0:
-            # 3. 為了徹底杜絕 NameError，我們直接將 8 種組套的倍率與 CEILING 常數完全攤平計算
-            ratios_data = [
-                {"name": "1:1", "mult": 0.6, "ceil": 10.0, "danger": False},
-                {"name": "1:2", "mult": 0.6, "ceil": 5.0, "danger": False},
-                {"name": "1:5", "mult": 6.0, "ceil": 20.0, "danger": False},
-                {"name": "1:10", "mult": 6.0, "ceil": 10.0, "danger": False},
-                {"name": "1:20", "mult": 6.0, "ceil": 5.0, "danger": False},
-                {"name": "2:1", "mult": 0.6, "ceil": 20.0, "danger": False},
-                {"name": "5:1", "mult": 0.6, "ceil": 50.0, "danger": True},
-                {"name": "10:1", "mult": 0.6, "ceil": 100.0, "danger": True}
-            ]
+            # 3. 為了徹底乾淨、消滅迴圈導致的縮排與 NameError，我們直接把 8 個組套完全手動平鋪開來！
             
-            for item in ratios_data:
-                r_name = item["name"]
-                d_mult = item["mult"]
-                c_val = item["ceil"]
-                is_ultra_dense = item["danger"]
-                
-                # 🛠️ 嚴格對齊您的 Excel 公式
-                f_vol = float(max(c_val, math.ceil((i_flow_p4 * 24) / c_val) * c_val))
-                c_dose = (b1_bw * d_mult) * (f_vol / c_val)
-                k_dose = (c_dose / f_vol) * i_flow_p4 * 1000 / 60 / b1_bw
-                
-                # CDSS 安全防呆機制：若為 Norepinephrine 且濃度高於 2:1
-                is_norepi_danger = (s_drug_p4 == "Norepinephrine" and is_ultra_dense)
-                copy_text = f"抽取 {s_drug_p4} {c_dose:.2f} mg 加入 D5W 至 {f_vol:.0f} mL"
-                
-                # 4. 外觀排版
-                bg_color = "#3c1414" if is_norepi_danger else "#13171a"
-                border_color = "#ff4444" if is_norepi_danger else "#1E88E5"
-                
-                st.markdown(f"""
-                <div style='background-color: {bg_color}; padding: 10px 14px; border-radius: 4px; border-left: 4px solid {border_color}; margin-bottom: 6px;'>
-                    <span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 ({r_name})</span>
-                    <p style='margin:4px 0 0 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>
-                        {c_dose:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> 
-                        &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
-                        D5W 至 {f_vol:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> 
-                        &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; 
-                        <span style='color:#4CAF50;'>{k_dose:.3f} mcg/kg/min</span>
-                    </p>
-                    {"<p style='margin:4px 0 0 0; color:#ff4444; font-size:12px; font-weight:bold;'>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>" if is_norepi_danger else ""}
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.code(copy_text, language="text")
-                st.write("<div style='height:2px;'></div>", unsafe_allow_html=True)
+            # --- 比例 1:1 (d_mult=0.6, c_val=10.0) ---
+            f_1 = float(max(10.0, math.ceil((i_flow_p4 * 24) / 10.0) * 10.0))
+            c_1 = (b1_bw * 0.6) * (f_1 / 10.0)
+            k_1 = (c_1 / f_1) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_1:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_1:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_1:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_1:.2f} mg 加入 D5W 至 {f_1:.0f} mL", language="text")
+
+            # --- 比例 1:2 (d_mult=0.6, c_val=5.0) ---
+            f_2 = float(max(5.0, math.ceil((i_flow_p4 * 24) / 5.0) * 5.0))
+            c_2 = (b1_bw * 0.6) * (f_2 / 5.0)
+            k_2 = (c_2 / f_2) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:2)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_2:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_2:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_2:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_2:.2f} mg 加入 D5W 至 {f_2:.0f} mL", language="text")
+
+            # --- 比例 1:5 (d_mult=6.0, c_val=20.0) ---
+            f_3 = float(max(20.0, math.ceil((i_flow_p4 * 24) / 20.0) * 20.0))
+            c_3 = (b1_bw * 6.0) * (f_3 / 20.0)
+            k_3 = (c_3 / f_3) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:5)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_3:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_3:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_3:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_3:.2f} mg 加入 D5W 至 {f_3:.0f} mL", language="text")
+
+            # --- 比例 1:10 (d_mult=6.0, c_val=10.0) ---
+            f_4 = float(max(10.0, math.ceil((i_flow_p4 * 24) / 10.0) * 10.0))
+            c_4 = (b1_bw * 6.0) * (f_4 / 10.0)
+            k_4 = (c_4 / f_4) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:10)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_4:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_4:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_4:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_4:.2f} mg 加入 D5W 至 {f_4:.0f} mL", language="text")
+
+            # --- 比例 1:20 (d_mult=6.0, c_val=5.0) ---
+            f_5 = float(max(5.0, math.ceil((i_flow_p4 * 24) / 5.0) * 5.0))
+            c_5 = (b1_bw * 6.0) * (f_5 / 5.0)
+            k_5 = (c_5 / f_5) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:20)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_5:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_5:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_5:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_5:.2f} mg 加入 D5W 至 {f_5:.0f} mL", language="text")
+
+            # --- 比例 2:1 (d_mult=0.6, c_val=20.0) ---
+            f_6 = float(max(20.0, math.ceil((i_flow_p4 * 24) / 20.0) * 20.0))
+            c_6 = (b1_bw * 0.6) * (f_6 / 20.0)
+            k_6 = (c_6 / f_6) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (2:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_6:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_6:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_6:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_6:.2f} mg 加入 D5W 至 {f_6:.0f} mL", language="text")
+
+            # --- 比例 5:1 (d_mult=0.6, c_val=50.0, ⚠️Norepinephrine高危) ---
+            f_7 = float(max(50.0, math.ceil((i_flow_p4 * 24) / 50.0) * 50.0))
+            c_7 = (b1_bw * 0.6) * (f_7 / 50.0)
+            k_7 = (c_7 / f_7) * i_flow_p4 * 1000 / 60 / b1_bw
+            is_n_danger_7 = (s_drug_p4 == "Norepinephrine")
+            bg_7 = "#3c1414" if is_n_danger_7 else "#13171a"
+            bd_7 = "#ff4444" if is_n_danger_7 else "#1E88E5"
+            st.markdown(f"<div style='background-color:{bg_7}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_7}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (5:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_7:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_7:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_7:.3f} mcg/kg/min</span></p>{' <p style=margin:4px_0_0_0; _color:#ff4444; _font-size:12px; _font-weight:bold;>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>' if is_n_danger_7 else ''}</div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_7:.2f} mg 加入 D5W 至 {f_7:.0f} mL", language="text")
+
+            # --- 比例 10:1 (d_mult=0.6, c_val=100.0, ⚠️Norepinephrine高危) ---
+            f_8 = float(max(100.0, math.ceil((i_flow_p4 * 24) / 100.0) * 100.0))
+            c_8 = (b1_bw * 0.6) * (f_8 / 100.0)
+            k_8 = (c_8 / f_8) * i_flow_p4 * 1000 / 60 / b1_bw
+            is_n_danger_8 = (s_drug_p4 == "Norepinephrine")
+            bg_8 = "#3c1414" if is_n_danger_8 else "#13171a"
+            bd_8 = "#ff4444" if is_n_danger_8 else "#1E88E5"
+            st.markdown(f"<div style='background-color:{bg_8}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_8}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (10:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_8:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_8:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_8:.3f} mcg/kg/min</span></p>{' <p style=margin:4px_0_0_0; _color:#ff4444; _font-size:12px; _font-weight:bold;>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>' if is_n_danger_8 else ''}</div>", unsafe_allow_html=True)
+            st.code(f"抽取 {s_drug_p4} {c_8:.2f} mg 加入 D5W 至 {f_8:.0f} mL", language="text")
+
         else:
             st.info("💡 請輸入大於 0 的幫浦流速開始即時演算。")
     else:
