@@ -782,7 +782,7 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
         st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動解鎖組套演算列表。")
 
 # =============================================================================
-# 🩸 區塊 4-2: Vasopressin pump —— 🧪 視覺高亮、完整複製調配字眼版
+# 🩸 區塊 4-2: Vasopressin pump —— 🧪 修正標題對齊、加粗顯眼、可複製字眼版
 # =============================================================================
 if main_page == "🩸 Vasopressin pump":
     st.markdown("<h3 style='color: #FF7043;'>🩸 Vasopressin pump - 獨立演算面板</h3>", unsafe_allow_html=True)
@@ -790,17 +790,25 @@ if main_page == "🩸 Vasopressin pump":
     if not has_input:
         st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動啟動 Vasopressin 演算列表。")
     else:
-        # 🌟 選擇區視覺強化：加上背景大黑盒與醒目標題，讓護理同仁一進來就知道這裡要切換
+        # 🌟 選擇區視覺強化：加上背景大黑盒與醒目標題，讓點選的地方極度明顯！
         st.markdown("""
-            <div style='background-color: #263238; padding: 8px 12px; border-radius: 4px; border-left: 5px solid #FF7043; margin-bottom: 10px;'>
-                <span style='color: #FFF; font-weight: bold; font-size: 15px;'>🎯 第一步：請先選取「臨床適應症計算機分類」</span>
+            <div style='background-color: #263238; padding: 10px 14px; border-radius: 4px; border-left: 5px solid #FF7043; margin-bottom: 12px; box-shadow: 0px 2px 4px rgba(0,0,0,0.3);'>
+                <span style='color: #FFF; font-weight: bold; font-size: 16px;'>🎯 請點選下方的「適應症計算機分類」來切換面板：</span>
             </div>
         """, unsafe_allow_html=True)
         
-        vaso_mode = st.radio(
-            "🗂️ 當前計算機切換：",
+        vaso_mode = st.sidebar.radio(
+            "🗂️ 當前計算機切換（亦可於此點選）：",
             ["1. Vasopressin - shock / PPHN (多組套流速回推劑量)", "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)"],
-            horizontal=False, # 改成縱向排列，大字體更好點選、更醒目
+            key="vaso_sidebar_sync_key"
+        )
+        
+        # 主畫面同步點選器（改為縱向大字體，排版更顯眼，完全消滅橫向被吃字的問題）
+        vaso_mode = st.radio(
+            "請直接勾選：",
+            ["1. Vasopressin - shock / PPHN (多組套流速回推劑量)", "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)"],
+            horizontal=False,
+            label_visibility="collapsed",
             key="vaso_mode_selector"
         )
         st.write("---")
@@ -852,7 +860,7 @@ if main_page == "🩸 Vasopressin pump":
                 st.info("💡 請輸入大於 0 的幫浦流速開始即時演算。")
 
         # ---------------------------------------------------------------------
-        # 適應症 2: Vasopressin-Diabetes insipidus (尿崩症)
+        # 適應症 2: Vasopressin-Diabetes insipidus (尿崩症) —— 🛠️ 完美對齊開門字眼！
         # ---------------------------------------------------------------------
         elif vaso_mode == "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)":
             with st.container(border=True):
@@ -878,7 +886,6 @@ if main_page == "🩸 Vasopressin pump":
                         c_31 = (b1_bw * 0.6) * (f_31 / 100.0)
                         k_31 = (c_31 / f_31) * v_di_flow_1 * 1000 / 60 / b1_bw
                         st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧪 換算劑量結果：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_31:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
-                        # 📥 擴充：加入一鍵複製文字
                         st.code(f"抽取 Vasopressin {c_31:.3f} IU 加入 D10W 至 {f_31:.0f} mL", language="text")
                     else:
                         st.caption("請輸入流速以啟動計算。")
@@ -902,7 +909,6 @@ if main_page == "🩸 Vasopressin pump":
                     if v_di_flow_2 > 0:
                         k_35 = (20.0 / 500.0 * v_di_flow_2 / b1_bw) * 1000 / 60
                         st.markdown(f"<p style='margin:6px 0 2px 0; font-size:14px; color:#ccc;'>🧮 換算劑量結果：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_35:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
-                        # 📥 擴充：加入一鍵複製文字
                         st.code(f"抽取 Vasopressin 20.000 IU 加入 D10W 至 500 mL", language="text")
                     else:
                         st.caption("請輸入流速以啟動計算。")
