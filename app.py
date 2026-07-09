@@ -1086,13 +1086,13 @@ if main_page == "💉 Insulin pump":
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Excel 同步初始建議流速 (I27):</p><p style='margin:0 0 6px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{i_27_suggest_flow:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL/hr</span></p>", unsafe_allow_html=True)
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後建議初始劑量 (K27):</p><p style='margin:0 0 2px 0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{k_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Excel 同步初始建議流速:</p><p style='margin:0 0 6px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{i_27_suggest_flow:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL/hr</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後建議初始劑量:</p><p style='margin:0 0 2px 0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{k_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
             
             with ins1_c2:
                 st.markdown("""
                     <div style='background-color: #1e3a1e; padding: 10px 14px; border-radius: 4px; border-left: 4px solid #4CAF50;'>
-                        <span style='font-size:13px; font-weight:bold; color:#81C784;'>🔌 目前幫浦手動調速計算區 (O27)</span>
+                        <span style='font-size:13px; font-weight:bold; color:#81C784;'>🔌 目前幫浦手動調速計算區</span>
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
@@ -1105,7 +1105,7 @@ if main_page == "💉 Insulin pump":
                     if o_27_user_flow > 0:
                         # Q27: 手動流速換算後單位劑量 = C27 / F27 * O27 / 體重
                         q_27 = (c_27 / f_27) * o_27_user_flow / b1_bw
-                        st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 目前實際給予劑量 (Q27):</p><p style='margin:0 0 2px 0; font-size: 24px; font-weight: bold; color: #ffb300;'>{q_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 目前實際給予劑量 :</p><p style='margin:0 0 2px 0; font-size: 24px; font-weight: bold; color: #ffb300;'>{q_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
                     else:
                         st.caption("請輸入流速以啟動暴露劑量換算。")
 
