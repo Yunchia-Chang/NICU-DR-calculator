@@ -854,7 +854,7 @@ if main_page == "🩸 Vasopressin pump":
         # ---------------------------------------------------------------------
         # 適應症 2: Vasopressin-Diabetes insipidus (尿崩症)
         # ---------------------------------------------------------------------
-        elif vaso_mode == "2. Vasopressin - Diabetes insipidus (尿崩症)":
+        elif vaso_mode == "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)":
             with st.container(border=True):
                 st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#4CAF50;'>📋 Vasopressin - Diabetes insipidus 臨床指引範圍</p>", unsafe_allow_html=True)
                 st.markdown("<div>• <b>建議劑量範圍</b>: 0.008 - 0.033 milliunits/kg/min</div>", unsafe_allow_html=True)
