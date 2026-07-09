@@ -914,14 +914,109 @@ if main_page == "🩸 Vasopressin pump":
                         st.caption("請輸入流速以啟動計算。")
                         
 # =============================================================================
-# 🧬 區塊 4-3: Prostaglandin E1與利尿劑pump (全新防禦骨架)
+# 🧬 區塊 4-3: Prostaglandin E1與利尿劑pump —— 🧪 動態基數配方演算面板
 # =============================================================================
 if main_page == "🧬 Prostaglandin E1與利尿劑pump":
-    st.markdown("### 🧬 Prostaglandin E1與利尿劑幫浦 - 獨立演算面板")
+    st.markdown("<h3 style='color: #4DB6AC;'>🧬 Prostaglandin E1 與利尿劑幫浦面板</h3>", unsafe_allow_html=True)
+    
     if not has_input:
-        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」。")
+        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動啟動演算面板。")
     else:
-        st.info("💡 正在等待新增 PGE1 與利尿劑幫浦的臨床配方與動態換算公式...")
+        # 1. 臨床建議劑量指引公告藍圖
+        with st.container(border=True):
+            st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#4DB6AC;'>📋 臨床建議劑量指引參考範圍</p>", unsafe_allow_html=True)
+            pge_rc1, pge_rc2, pge_rc3 = st.columns(3)
+            with pge_rc1:
+                st.markdown("<div>• <b>Prostaglandin E1</b>: 10 - 400 ng/kg/min</div>", unsafe_allow_html=True)
+            with pge_rc2:
+                st.markdown("<div>• <b>Furosemide pump</b>: 0.1 - 0.4 mg/kg/hr</div>", unsafe_allow_html=True)
+            with pge_rc3:
+                st.markdown("<div>• <b>Bumetanide pump</b>: 1 - 10 mcg/kg/hr</div>", unsafe_allow_html=True)
+
+        st.write("<div style='height:8px;'></div>", unsafe_allow_html=True)
+        
+        # 建立三欄並排橫向版面，讓選擇和輸入極度明顯
+        pge_col1, pge_col2, pge_col3 = st.columns(3)
+        
+        # ---------------------------------------------------------------------
+        # 藥物 (1): Prostaglandin E1
+        # ---------------------------------------------------------------------
+        with pge_col1:
+            with st.container(border=True):
+                st.markdown("### 🧪 **Prostaglandin E1**")
+                
+                if "p4_pge_flow" not in st.session_state:
+                    st.session_state["p4_pge_flow"] = 0.5
+                    
+                pge_flow = st.number_input("輸入 PGE1 流速 (mL/hr)", min_value=0.0, value=st.session_state["p4_pge_flow"], step=0.1, key="pge_flow_input")
+                st.session_state["p4_pge_flow"] = pge_flow
+                
+                if pge_flow > 0:
+                    # Excel 核心邏輯: 基數 = 200 / 體重 / 6
+                    pge_base = 200.0 / b1_bw / 6.0
+                    # in D10W = MAX(基數, CEILING(流速*24, 基數))
+                    f_28 = float(max(pge_base, math.ceil((pge_flow * 24) / pge_base) * pge_base))
+                    # Dose = 20 * (in D10W / 基數)
+                    c_28 = 20.0 * (f_28 / pge_base)
+                    # 換算後單位劑量 = C28 / F28 * 流速 * 1000 / 60 / 體重
+                    k_28 = (c_28 / f_28) * pge_flow * 1000.0 / 60.0 / b1_bw
+                    
+                    st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧮 換算暴露劑量：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_28:.3f} <span style='font-size:12px; color:#fff; font-weight:normal;'>ng/kg/min</span></p>", unsafe_allow_html=True)
+                    st.code(f"抽取 PGE1 {c_28:.2f} mcg 加入 D10W 至 {f_28:.1f} mL", language="text")
+                else:
+                    st.caption("請輸入流速以啟動計算。")
+
+        # ---------------------------------------------------------------------
+        # 藥物 (2): Furosemide (1:1)
+        # ---------------------------------------------------------------------
+        with pge_col2:
+            with st.container(border=True):
+                st.markdown("### 💧 **Furosemide (1:1)**")
+                
+                if "p4_furo_flow" not in st.session_state:
+                    st.session_state["p4_furo_flow"] = 0.5
+                    
+                furo_flow = st.number_input("輸入 Furosemide 流速 (mL/hr)", min_value=0.0, value=st.session_state["p4_furo_flow"], step=0.1, key="furo_flow_input")
+                st.session_state["p4_furo_flow"] = furo_flow
+                
+                if furo_flow > 0:
+                    # Excel 核心邏輯: 基數 = 20 / 體重 / 1
+                    furo_base = 20.0 / b1_bw / 1.0
+                    # in D10W = MAX(基數, CEILING(流速*24, 基數))
+                    f_29 = float(max(furo_base, math.ceil((furo_flow * 24) / furo_base) * furo_base))
+                    # Dose = 20 * (in D10W / 基數)
+                    c_29 = 20.0 * (f_29 / furo_base)
+                    # 換算後單位劑量 = C29 / F29 * 流速 / 體重
+                    k_29 = (c_29 / f_29) * furo_flow / b1_bw
+                    
+                    st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧮 換算暴露劑量：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_29:.3f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg/kg/hr</span></p>", unsafe_allow_html=True)
+                    st.code(f"抽取 Furosemide {c_29:.2f} mg 加入 D10W 至 {f_29:.1f} mL", language="text")
+                else:
+                    st.caption("請輸入流速以啟動計算。")
+
+        # ---------------------------------------------------------------------
+        # 藥物 (3): Bumetanide 0.02mg/mL
+        # ---------------------------------------------------------------------
+        with pge_col3:
+            with st.container(border=True):
+                st.markdown("### 🧪 **Bumetanide 0.02mg/mL**")
+                st.markdown("<p style='margin:0; font-size:12px; color:#ffb300; font-weight:bold;'>固定調配規格：1 mg 加入 D10W 至 500 mL</p>", unsafe_allow_html=True) # 0.02mg/mL 等於 1mg in 50mL 或是 10mg in 500mL，依據圖片規格寫 1 mg in 50 mL
+                
+                if "p4_bume_flow" not in st.session_state:
+                    st.session_state["p4_bume_flow"] = 0.5
+                    
+                bume_flow = st.number_input("輸入 Bumetanide 流速 (mL/hr)", min_value=0.0, value=st.session_state["p4_bume_flow"], step=0.1, key="bume_flow_input")
+                st.session_state["p4_bume_flow"] = bume_flow
+                
+                if bume_flow > 0:
+                    # Excel 固定值: C30 = 1 mg, F30 = 50 mL
+                    # 換算後單位劑量 = C30 / F30 * 流速 / 體重 * 1000
+                    k_30 = (1.0 / 50.0 * bume_flow / b1_bw) * 1000.0
+                    
+                    st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧮 換算暴露劑量：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_30:.3f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mcg/kg/hr</span></p>", unsafe_allow_html=True)
+                    st.code(f"抽取 Bumetanide 1.00 mg 加入 D10W 至 50.0 mL", language="text")
+                else:
+                    st.caption("請輸入流速以啟動計算。")
 
 # =============================================================================
 # 💉 區塊 4-4: Insulin pump (全新防禦骨架)
