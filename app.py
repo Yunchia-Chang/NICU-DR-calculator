@@ -1144,7 +1144,7 @@ if main_page == "💉 Insulin pump":
             with ins2_col1:
                 st.markdown("""
                     <div style='background-color: #2c1616; padding: 10px 14px; border-radius: 4px; border-left: 4px solid #e53935;'>
-                        <span style='font-size:13px; font-weight:bold; color:#ef5350;'>🟥 胰島素計算劑量 (C36, Over 30 mins)</span>
+                        <span style='font-size:13px; font-weight:bold; color:#ef5350;'>🟥 胰島素計算劑量 (Over 30 mins)</span>
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
@@ -1153,7 +1153,7 @@ if main_page == "💉 Insulin pump":
             with ins2_col2:
                 st.markdown("""
                     <div style='background-color: #2b2214; padding: 10px 14px; border-radius: 4px; border-left: 4px solid #ffb300;'>
-                        <span style='font-size:13px; font-weight:bold; color:#ffb300;'>🟨 同步葡萄糖防線 (F36, Over 30 mins)</span>
+                        <span style='font-size:13px; font-weight:bold; color:#ffb300;'>🟨 同步葡萄糖防線 (Over 30 mins)</span>
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
