@@ -782,28 +782,33 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
         st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動解鎖組套演算列表。")
 
 # =============================================================================
-# 🩸 區塊 4-2: Vasopressin pump —— 🧪 雙適應症動態演算鎖定面板
+# 🩸 區塊 4-2: Vasopressin pump —— 🧪 視覺高亮、完整複製調配字眼版
 # =============================================================================
 if main_page == "🩸 Vasopressin pump":
-    st.markdown("### 🩸 Vasopressin pump - 獨立演算面板")
+    st.markdown("<h3 style='color: #FF7043;'>🩸 Vasopressin pump - 獨立演算面板</h3>", unsafe_allow_html=True)
     
     if not has_input:
         st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動啟動 Vasopressin 演算列表。")
     else:
-        # 子功能分流導航
+        # 🌟 選擇區視覺強化：加上背景大黑盒與醒目標題，讓護理同仁一進來就知道這裡要切換
+        st.markdown("""
+            <div style='background-color: #263238; padding: 8px 12px; border-radius: 4px; border-left: 5px solid #FF7043; margin-bottom: 10px;'>
+                <span style='color: #FFF; font-weight: bold; font-size: 15px;'>🎯 第一步：請先選取「臨床適應症計算機分類」</span>
+            </div>
+        """, unsafe_allow_html=True)
+        
         vaso_mode = st.radio(
-            "請選擇 Vasopressin 臨床適應症計算機：",
-            ["1. Vasopressin - shock / PPHN", "2. Vasopressin - Diabetes insipidus (尿崩症)"],
-            horizontal=True,
+            "🗂️ 當前計算機切換：",
+            ["1. Vasopressin - shock / PPHN (多組套流速回推劑量)", "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)"],
+            horizontal=False, # 改成縱向排列，大字體更好點選、更醒目
             key="vaso_mode_selector"
         )
         st.write("---")
 
         # ---------------------------------------------------------------------
-        # 適應症 1: Vasopressin-shock.PPHN (包含 1:1, 1:2, 1:5 三種組套)
+        # 適應症 1: Vasopressin-shock.PPHN
         # ---------------------------------------------------------------------
-        if vaso_mode == "1. Vasopressin - shock / PPHN":
-            # 建立臨床劑量指引公告藍圖
+        if vaso_mode == "1. Vasopressin - shock / PPHN (多組套流速回推劑量)":
             with st.container(border=True):
                 st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#64B5F6;'>📋 Vasopressin 臨床指引參考範圍 ( mU/kg/min )</p>", unsafe_allow_html=True)
                 v_rc1, vaso_rc2 = st.columns(2)
@@ -814,11 +819,9 @@ if main_page == "🩸 Vasopressin pump":
 
             st.write("<div style='height:8px;'></div>", unsafe_allow_html=True)
             
-            # 初始化與狀態鎖定
             if "v_shock_flow" not in st.session_state:
                 st.session_state["v_shock_flow"] = 0.5
             
-            # 使用者流速輸入框
             v_flow = st.number_input("🔌 請輸入目前幫浦設定流速 (mL/hr):", min_value=0.0, value=st.session_state["v_shock_flow"], step=0.1, key="v_shock_flow_input")
             st.session_state["v_shock_flow"] = v_flow
             
@@ -849,7 +852,7 @@ if main_page == "🩸 Vasopressin pump":
                 st.info("💡 請輸入大於 0 的幫浦流速開始即時演算。")
 
         # ---------------------------------------------------------------------
-        # 適應症 2: Vasopressin-Diabetes insipidus (包含兩種計算機)
+        # 適應症 2: Vasopressin-Diabetes insipidus (尿崩症)
         # ---------------------------------------------------------------------
         elif vaso_mode == "2. Vasopressin - Diabetes insipidus (尿崩症)":
             with st.container(border=True):
@@ -874,7 +877,9 @@ if main_page == "🩸 Vasopressin pump":
                         f_31 = float(max(100.0, math.ceil((v_di_flow_1 * 24) / 100.0) * 100.0))
                         c_31 = (b1_bw * 0.6) * (f_31 / 100.0)
                         k_31 = (c_31 / f_31) * v_di_flow_1 * 1000 / 60 / b1_bw
-                        st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧪 泡製劑量與換算結果：</p><p style='margin:0; font-size: 18px; font-weight: bold; color: #1E88E5;'>{c_31:.3f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU</span> &nbsp;<span style='color:#555;'>|</span>&nbsp; D10W 至 {f_31:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span></p><p style='margin:2px 0 0 0; font-size:18px; font-weight:bold; color:#4CAF50;'>{k_31:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧪 換算暴露結果：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_31:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
+                        # 📥 擴充：加入一鍵複製文字
+                        st.code(f"抽取 Vasopressin {c_31:.3f} IU 加入 D10W 至 {f_31:.0f} mL", language="text")
                     else:
                         st.caption("請輸入流速以啟動計算。")
 
@@ -882,9 +887,8 @@ if main_page == "🩸 Vasopressin pump":
             with di_col2:
                 with st.container(border=True):
                     st.markdown("### 🔌 **(2) 固定濃度 0.04 IU/mL 法**")
-                    st.markdown("<p style='margin:0; font-size:12px; color:#ffb300;'>出廠調配規格：20 IU 加入 D10W 至 500 mL</p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:0; font-size:12px; color:#ffb300; font-weight:bold;'>出廠固定調配規格：20 IU 加入 D10W 至 500 mL</p>", unsafe_allow_html=True)
                     
-                    # 臨床流速安全建議區間 (D33 & D34)
                     d33_suggest_min = 0.0125 * b1_bw
                     d34_suggest_max = 0.05 * b1_bw
                     st.markdown(f"<p style='margin:4px 0 4px 0; font-size:13px; color:#888;'>• 臨床安全流速參考區間：<br><span style='color:#64B5F6; font-weight:bold;'>{d33_suggest_min:.4f} ~ {d34_suggest_max:.4f} mL/hr</span></p>", unsafe_allow_html=True)
@@ -896,9 +900,10 @@ if main_page == "🩸 Vasopressin pump":
                     st.session_state["v_di_flow_2"] = v_di_flow_2
                     
                     if v_di_flow_2 > 0:
-                        # 依照 G35 演算公式 (C32=20, F32=500)
                         k_35 = (20.0 / 500.0 * v_di_flow_2 / b1_bw) * 1000 / 60
                         st.markdown(f"<p style='margin:6px 0 2px 0; font-size:14px; color:#ccc;'>🧮 換算暴露劑量：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_35:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
+                        # 📥 擴充：加入一鍵複製文字
+                        st.code(f"抽取 Vasopressin 20.000 IU 加入 D10W 至 500 mL", language="text")
                     else:
                         st.caption("請輸入流速以啟動計算。")
                         
