@@ -47,13 +47,22 @@ q1_pma_wk = pma_total_days // 7
 s1_pma_day = pma_total_days % 7
 
 # =============================================================================
-# 🛠️ 終極大翻轉：利用側邊欄進行「全局分頁大開關」，徹底杜絕 st.tabs 的亂跳 Bug！
+# 🛠️ 全局分頁大開關 —— 擴充 8 大核心面板版
 # =============================================================================
 st.sidebar.write("---")
 st.sidebar.header("🎯 核心功能導航")
 main_page = st.sidebar.radio(
     "請選擇主要調配面板：",
-    ["💊 常用藥物計算機", "⚡ Ion dosage", "🫁 DART.BURST", "🔌 PUMP 總表115", "💤 Dexmedetomidine"],
+    [
+        "💊 常用藥物計算機", 
+        "⚡ Ion dosage", 
+        "🫁 DART.BURST", 
+        "🔌 升壓劑.止痛鎮靜pump", 
+        "🩸 Vasopressin pump", 
+        "🧬 Prostaglandin E1與利尿劑pump", 
+        "💉 Insulin pump", 
+        "💤 Dexmedetomidine"
+    ],
     key="main_page_navigator"
 )
 
@@ -683,10 +692,10 @@ if main_page == "🫁 DART.BURST":
                 st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
 
 # =============================================================================
-# 🔌 區塊 4: PUMP 總表115 —— 🔒 完全鎖死狀態，點選任何元件絕對不亂跑、不跳頁！
+# 🔌 區塊 4: 升壓劑.止痛鎮靜pump (原 PUMP 總表 10 品項完美保留)
 # =============================================================================
-if main_page == "🔌 PUMP 總表115":
-    st.markdown("### 🔌 PUMP 總表115 - 多配方動態演算面板")
+if main_page == "🔌 升壓劑.止痛鎮靜pump":
+    st.markdown("### 🔌 升壓劑.止痛鎮靜幫浦 - 多配方動態演算面板")
     
     if "fixed_drug_p4" not in st.session_state:
         st.session_state["fixed_drug_p4"] = "Dopamine"
@@ -770,7 +779,37 @@ if main_page == "🔌 PUMP 總表115":
         else:
             st.info("💡 請輸入大於 0 的幫浦流速開始即時演算。")
     else:
-        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動解鎖 8 大組套全開列表。")
+        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動解鎖組套演算列表。")
+
+# =============================================================================
+# 🩸 區塊 4-2: Vasopressin pump (全新防禦骨架)
+# =============================================================================
+if main_page == "🩸 Vasopressin pump":
+    st.markdown("### 🩸 Vasopressin pump - 獨立演算面板")
+    if not has_input:
+        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」。")
+    else:
+        st.info("💡 正在等待新增 Vasopressin 的臨床配方與動態換算公式...")
+
+# =============================================================================
+# 🧬 區塊 4-3: Prostaglandin E1與利尿劑pump (全新防禦骨架)
+# =============================================================================
+if main_page == "🧬 Prostaglandin E1與利尿劑pump":
+    st.markdown("### 🧬 Prostaglandin E1與利尿劑幫浦 - 獨立演算面板")
+    if not has_input:
+        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」。")
+    else:
+        st.info("💡 正在等待新增 PGE1 與利尿劑幫浦的臨床配方與動態換算公式...")
+
+# =============================================================================
+# 💉 區塊 4-4: Insulin pump (全新防禦骨架)
+# =============================================================================
+if main_page == "💉 Insulin pump":
+    st.markdown("### 💉 Insulin pump - 獨立演算面板")
+    if not has_input:
+        st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」。")
+    else:
+        st.info("💡 正在等待新增 Insulin 幫浦的臨床配方與動態換算公式...")
 
 # =============================================================================
 # 💤 區塊 5: Dexmedetomidine —— 全局隔離，絕對不跳
