@@ -877,7 +877,7 @@ if main_page == "🩸 Vasopressin pump":
                         f_31 = float(max(100.0, math.ceil((v_di_flow_1 * 24) / 100.0) * 100.0))
                         c_31 = (b1_bw * 0.6) * (f_31 / 100.0)
                         k_31 = (c_31 / f_31) * v_di_flow_1 * 1000 / 60 / b1_bw
-                        st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧪 換算暴露結果：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_31:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='margin:6px 0 2px 0; font-size:13px; color:#ccc;'>🧪 換算劑量結果：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_31:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
                         # 📥 擴充：加入一鍵複製文字
                         st.code(f"抽取 Vasopressin {c_31:.3f} IU 加入 D10W 至 {f_31:.0f} mL", language="text")
                     else:
@@ -887,11 +887,11 @@ if main_page == "🩸 Vasopressin pump":
             with di_col2:
                 with st.container(border=True):
                     st.markdown("### 🔌 **(2) 固定濃度 0.04 IU/mL 法**")
-                    st.markdown("<p style='margin:0; font-size:12px; color:#ffb300; font-weight:bold;'>出廠固定調配規格：20 IU 加入 D10W 至 500 mL</p>", unsafe_allow_html=True)
+                    st.markdown("<p style='margin:0; font-size:12px; color:#ffb300; font-weight:bold;'>固定調配規格：20 IU 加入 D10W 至 500 mL</p>", unsafe_allow_html=True)
                     
                     d33_suggest_min = 0.0125 * b1_bw
                     d34_suggest_max = 0.05 * b1_bw
-                    st.markdown(f"<p style='margin:4px 0 4px 0; font-size:13px; color:#888;'>• 臨床安全流速參考區間：<br><span style='color:#64B5F6; font-weight:bold;'>{d33_suggest_min:.4f} ~ {d34_suggest_max:.4f} mL/hr</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:4px 0 4px 0; font-size:13px; color:#888;'>• 臨床最低-最高流速參考區間：<br><span style='color:#64B5F6; font-weight:bold;'>{d33_suggest_min:.4f} ~ {d34_suggest_max:.4f} mL/hr</span></p>", unsafe_allow_html=True)
                     
                     if "v_di_flow_2" not in st.session_state:
                         st.session_state["v_di_flow_2"] = float(round(d33_suggest_min, 4)) if d33_suggest_min > 0 else 0.0
@@ -901,7 +901,7 @@ if main_page == "🩸 Vasopressin pump":
                     
                     if v_di_flow_2 > 0:
                         k_35 = (20.0 / 500.0 * v_di_flow_2 / b1_bw) * 1000 / 60
-                        st.markdown(f"<p style='margin:6px 0 2px 0; font-size:14px; color:#ccc;'>🧮 換算暴露劑量：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_35:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='margin:6px 0 2px 0; font-size:14px; color:#ccc;'>🧮 換算劑量結果：</p><p style='margin:0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_35:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mU/kg/min</span></p>", unsafe_allow_html=True)
                         # 📥 擴充：加入一鍵複製文字
                         st.code(f"抽取 Vasopressin 20.000 IU 加入 D10W 至 500 mL", language="text")
                     else:
