@@ -1019,7 +1019,7 @@ if main_page == "🧬 Prostaglandin E1與利尿劑pump":
                     st.caption("請輸入流速以啟動計算。")
 
 # =============================================================================
-# 💉 區塊 4-4: Insulin pump —— 🧪 雙模式胰島素臨床精密微量滴注面板
+# 💉 區塊 4-4: Insulin pump —— 🧪 完美對齊 Excel 初始流速校正版
 # =============================================================================
 if main_page == "💉 Insulin pump":
     st.markdown("<h3 style='color: #4954bc;'>💉 Insulin aspart (速效胰島素) 幫浦面板</h3>", unsafe_allow_html=True)
@@ -1040,7 +1040,7 @@ if main_page == "💉 Insulin pump":
         # 模式 1: 控制血糖初始 PUMP
         # ---------------------------------------------------------------------
         if ins_mode == "1. 控制血糖初始 PUMP (Continuous IV infusion)":
-            # 依據使用者提供的臨床規則建立對應指引公告藍圖
+            # 完整臨床指引與規則劑量區塊
             with st.container(border=True):
                 st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#64B5F6;'>📋 控制血糖初始 PUMP 臨床規則與建議劑量</p>", unsafe_allow_html=True)
                 st.markdown("""
@@ -1054,59 +1054,58 @@ if main_page == "💉 Insulin pump":
 
             st.write("<div style='height:8px;'></div>", unsafe_allow_html=True)
             
-            # Excel 核心 IFS 體重級距基數換算
+            # 1. 根據體重決定級距常數與「最新校正之 Excel 固定初始流速 (I27)」
             if b1_bw < 2.0:
                 ins_weight_factor = 25.0
+                i_27_suggest_flow = 0.10   # 👈 完美對齊 Excel: 固定 0.1 mL/hr
             elif b1_bw < 4.0:
                 ins_weight_factor = 12.5
+                i_27_suggest_flow = 0.20   # 👈 完美對齊 Excel: 固定 0.2 mL/hr
             elif b1_bw <= 8.0:
                 ins_weight_factor = 6.25
+                i_27_suggest_flow = 0.40   # 👈 完美對齊 Excel: 固定 0.4 mL/hr
             else:
-                ins_weight_factor = 6.25 # 超過 8kg 暫以 6.25 基礎計算
+                ins_weight_factor = 6.25
+                i_27_suggest_flow = 0.40
                 
-            # F27: in HS 恆定 50 mL 或採更高安全安全常數上限 (比照 F27 = MAX(50, CEILING(I3*24, 50)))
-            # 這裡我們預設使用標準規格 50 mL 來呈現最準確的泡製字眼
-            f_27 = 50.0
+            f_27 = 50.0  # 恆定 HS 50 mL
             
-            # C27: Dose = 體重 * 級距常數 * (f_27 / 50)
+            # C27: Dose = 體重 * 級距常數 * (F27/50)
             c_27 = (b1_bw * ins_weight_factor) * (f_27 / 50.0)
             
-            # I27: 初始建議流速公式 = 0.01 * 體重 / 0.75
-            i_27_suggest_flow = 0.01 * b1_bw / 0.75
-            
-            # K27: 初始流速換算後的單位劑量 = C27 / F27 * I27 / 體重
+            # K27: 初始流速換算後的單位劑量 = C27 / F27 * I27 / 體重 (算出來每級距都會是完美的 0.0500 IU/kg/hr)
             k_27 = (c_27 / f_27) * i_27_suggest_flow / b1_bw if b1_bw > 0 else 0.0
             
-            # 提供兩個清晰並排的區塊：左邊看「系統自動推薦」，右邊「供護理手動微調輸入」
+            # 2. 呈現並排互動區塊：左邊看「系統自動推薦」，右邊「供護理手動微調輸入」
             ins1_c1, ins1_c2 = st.columns(2)
             
             with ins1_c1:
                 st.markdown("""
                     <div style='background-color: #1a2432; padding: 10px 14px; border-radius: 4px; border-left: 4px solid #1E88E5;'>
-                        <span style='font-size:13px; font-weight:bold; color:#64B5F6;'>💡 系統初始建議流速狀態</span>
+                        <span style='font-size:13px; font-weight:bold; color:#64B5F6;'>💡 系統初始建議流速狀態 (目標 0.05 IU/kg/hr)</span>
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 初始流速建議:</p><p style='margin:0 0 6px 0; font-size: 20px; font-weight: bold; color: #1E88E5;'>{i_27_suggest_flow:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL/hr</span></p>", unsafe_allow_html=True)
-                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後初始劑量:</p><p style='margin:0 0 2px 0; font-size: 20px; font-weight: bold; color: #4CAF50;'>{k_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• Excel 同步初始建議流速 (I27):</p><p style='margin:0 0 6px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{i_27_suggest_flow:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL/hr</span></p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 換算後建議初始劑量 (K27):</p><p style='margin:0 0 2px 0; font-size: 22px; font-weight: bold; color: #4CAF50;'>{k_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
             
             with ins1_c2:
                 st.markdown("""
                     <div style='background-color: #1e3a1e; padding: 10px 14px; border-radius: 4px; border-left: 4px solid #4CAF50;'>
-                        <span style='font-size:13px; font-weight:bold; color:#81C784;'>🔌 護理同仁目前幫浦手動調速區</span>
+                        <span style='font-size:13px; font-weight:bold; color:#81C784;'>🔌 目前幫浦手動調速計算區 (O27)</span>
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
                     if "p4_ins_user_flow" not in st.session_state:
                         st.session_state["p4_ins_user_flow"] = float(round(i_27_suggest_flow, 2))
                     
-                    o_27_user_flow = st.number_input("請輸入當前幫浦實際設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=st.session_state["p4_ins_user_flow"], step=0.01, format="%.4f", key="ins_user_flow_input")
+                    o_27_user_flow = st.number_input("請輸入設定流速 (mL/hr)", min_value=0.0, max_value=5.0, value=st.session_state["p4_ins_user_flow"], step=0.01, format="%.4f", key="ins_user_flow_input")
                     st.session_state["p4_ins_user_flow"] = o_27_user_flow
                     
                     if o_27_user_flow > 0:
                         # Q27: 手動流速換算後單位劑量 = C27 / F27 * O27 / 體重
                         q_27 = (c_27 / f_27) * o_27_user_flow / b1_bw
-                        st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 目前實際暴露劑量:</p><p style='margin:0 0 2px 0; font-size: 22px; font-weight: bold; color: #ffb300;'>{q_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='margin:1px 0; font-size:14px; color:#888;'>• 目前實際給予劑量 (Q27):</p><p style='margin:0 0 2px 0; font-size: 24px; font-weight: bold; color: #ffb300;'>{q_27:.4f} <span style='font-size:12px; color:#fff; font-weight:normal;'>IU/kg/hr</span></p>", unsafe_allow_html=True)
                     else:
                         st.caption("請輸入流速以啟動暴露劑量換算。")
 
@@ -1115,14 +1114,14 @@ if main_page == "💉 Insulin pump":
             st.code(f"抽取 Insulin aspart {c_27:.3f} IU 加入 HS 至 50 mL", language="text")
 
         # ---------------------------------------------------------------------
-        # 模式 2: Hyperkalemia PUMP (高血鉀緊急處置)
+        # 模式 2: Hyperkalemia PUMP
         # ---------------------------------------------------------------------
         elif ins_mode == "2. Hyperkalemia PUMP (高血鉀緊急處置)":
             with st.container(border=True):
                 st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#e53935;'>📋 Hyperkalemia 臨床處置指引安全規則</p>", unsafe_allow_html=True)
                 st.markdown("""
                     <div style='font-size:12px; color:#ccc; line-height:1.6;'>
-                    • <b>Insulin 劑量</b>: 0.1 IU/kg ( 單次最大極限 Max: 10 IU )，需於 30 分鐘內微量滴注完成。<br>
+                    • <b>Insulin 劑量</b>: 0.1 IU/kg ( 單次最大極限 Max: 10 IU )，需於 30 分鐘內微量點滴滴注完成。<br>
                     • <b>IV Glucose 同步糖防線</b>: 0.5 g/kg over 30 mins。<br>
                     • <b>&lt; 5 歲兒童 D10W 規格</b>: 建議使用 D10W 5 mL/kg ( D10W 最大極限 250 mL；若使用 D25W 則最大極限 100 mL )。
                     </div>
@@ -1135,8 +1134,7 @@ if main_page == "💉 Insulin pump":
             c_36_insulin_dose = min(10.0, c_36_raw) # 鎖死最大 10 IU 安全極限
             
             f_36_glucose_ml = 5.0 * b1_bw
-            # 針對 D10W 250mL 最大極限進行安全保護
-            f_36_glucose_ml = min(250.0, f_36_glucose_ml)
+            f_36_glucose_ml = min(250.0, f_36_glucose_ml) # 鎖死最大 250 mL 安全極限
             
             # 計算同步葡萄糖公克數 (0.5g/kg)
             glucose_grams = 0.5 * b1_bw
@@ -1146,7 +1144,7 @@ if main_page == "💉 Insulin pump":
             with ins2_col1:
                 st.markdown("""
                     <div style='background-color: #2c1616; padding: 10px 14px; border-radius: 4px; border-left: 4px solid #e53935;'>
-                        <span style='font-size:13px; font-weight:bold; color:#ef5350;'>🟥 胰島素計算劑量 (Over 30 mins)</span>
+                        <span style='font-size:13px; font-weight:bold; color:#ef5350;'>🟥 胰島素計算劑量 (C36, Over 30 mins)</span>
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
@@ -1155,7 +1153,7 @@ if main_page == "💉 Insulin pump":
             with ins2_col2:
                 st.markdown("""
                     <div style='background-color: #2b2214; padding: 10px 14px; border-radius: 4px; border-left: 4px solid #ffb300;'>
-                        <span style='font-size:13px; font-weight:bold; color:#ffb300;'>🟨 同步葡萄糖防線 (Over 30 mins)</span>
+                        <span style='font-size:13px; font-weight:bold; color:#ffb300;'>🟨 同步葡萄糖防線 (F36, Over 30 mins)</span>
                     </div>
                 """, unsafe_allow_html=True)
                 with st.container(border=True):
@@ -1164,7 +1162,7 @@ if main_page == "💉 Insulin pump":
             st.write("---")
             st.markdown("<p style='margin:0; font-size:13px; color:#ccc; font-weight:bold;'>📋 複製以下完整高血鉀處置調配字眼：</p>", unsafe_allow_html=True)
             st.code(f"【高血鉀緊急處置】抽取 Insulin aspart {c_36_insulin_dose:.3f} IU 混合於 D10W {f_36_glucose_ml:.2f} mL 中，於 30 分鐘內點滴滴注完畢。", language="text")
-
+            
 # =============================================================================
 # 💤 區塊 5: Dexmedetomidine —— 全局隔離，絕對不跳
 # =============================================================================
