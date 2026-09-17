@@ -692,7 +692,7 @@ if main_page == "🫁 DART.BURST":
                 st.markdown(f"<p style='margin:0 0 4px 0; font-size: 22px; font-weight: bold; color: #1E88E5;'>{hydro_dose:.2f} <span style='font-size:13px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #4CAF50;'>QD</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color: #F4511E; font-size:16px;'>3 days</span></p>", unsafe_allow_html=True)
 
 # =============================================================================
-# 🔌 區塊 4: 升壓劑.止痛鎮靜pump (原 PUMP 總表 10 品項完美保留)
+# 🔌 區塊 4: 升壓劑.止痛鎮靜pump (已校準縮排與 Norepinephrine 警示邏輯)
 # =============================================================================
 if main_page == "🔌 升壓劑.止痛鎮靜pump":
     st.markdown("### 🔌 升壓劑.止痛鎮靜幫浦 - 多配方動態演算面板")
@@ -732,11 +732,11 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
         st.write("---")
         st.markdown(f"#### 🎯 當前藥物：<span style='color:#1E88E5;'>{s_drug_p4}</span> | 設定流速：<span style='color:#4CAF50;'>{i_flow_p4:.1f} mL/hr</span>", unsafe_allow_html=True)
         
-      if i_flow_p4 > 0:
+        if i_flow_p4 > 0:
             is_norepi = (s_drug_p4 == "Norepinephrine")
             warn_msg_over_conc = "<p style='margin:4px 0 0 0; color:#ff4444; font-size:12px; font-weight:bold;'>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>"
 
-            # --- 1. 組套 (1:1) —— ⚠️ Norepinephrine 超濃危險 ---
+            # --- 1. 組套 (1:1) —— ⚠️ Norepinephrine 超濃 ---
             f_1 = float(max(10.0, math.ceil((i_flow_p4 * 24) / 10.0) * 10.0))
             c_1 = (b1_bw * 0.6) * (f_1 / 10.0)
             k_1 = (c_1 / f_1) * i_flow_p4 * 1000 / 60 / b1_bw
@@ -745,7 +745,7 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
             st.markdown(f"<div style='background-color:{bg_1}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_1}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_1:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_1:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_1:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_1:.2f} mg 加入 D5W 至 {f_1:.0f} mL", language="text")
 
-            # --- 2. 組套 (1:2) —— ⚠️ Norepinephrine 超濃危險 ---
+            # --- 2. 組套 (1:2) —— ⚠️ Norepinephrine 超濃 ---
             f_2 = float(max(5.0, math.ceil((i_flow_p4 * 24) / 5.0) * 5.0))
             c_2 = (b1_bw * 0.6) * (f_2 / 5.0)
             k_2 = (c_2 / f_2) * i_flow_p4 * 1000 / 60 / b1_bw
@@ -754,7 +754,7 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
             st.markdown(f"<div style='background-color:{bg_2}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_2}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:2)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_2:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_2:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_2:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_2:.2f} mg 加入 D5W 至 {f_2:.0f} mL", language="text")
 
-            # --- 3. 組套 (1:5) —— ⚠️ Norepinephrine 超濃危險 ---
+            # --- 3. 組套 (1:5) —— ⚠️ Norepinephrine 超濃 ---
             f_3 = float(max(20.0, math.ceil((i_flow_p4 * 24) / 20.0) * 20.0))
             c_3 = (b1_bw * 6.0) * (f_3 / 20.0)
             k_3 = (c_3 / f_3) * i_flow_p4 * 1000 / 60 / b1_bw
@@ -763,7 +763,7 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
             st.markdown(f"<div style='background-color:{bg_3}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_3}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:5)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_3:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_3:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_3:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_3:.2f} mg 加入 D5W 至 {f_3:.0f} mL", language="text")
 
-            # --- 4. 組套 (1:10) —— ⚠️ Norepinephrine 超濃危險 ---
+            # --- 4. 組套 (1:10) —— ⚠️ Norepinephrine 超濃 ---
             f_4 = float(max(10.0, math.ceil((i_flow_p4 * 24) / 10.0) * 10.0))
             c_4 = (b1_bw * 6.0) * (f_4 / 10.0)
             k_4 = (c_4 / f_4) * i_flow_p4 * 1000 / 60 / b1_bw
@@ -772,7 +772,7 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
             st.markdown(f"<div style='background-color:{bg_4}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_4}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:10)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_4:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_4:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_4:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_4:.2f} mg 加入 D5W 至 {f_4:.0f} mL", language="text")
 
-            # --- 5. 組套 (1:20) —— ⚠️ Norepinephrine 超濃危險 ---
+            # --- 5. 組套 (1:20) —— ⚠️ Norepinephrine 超濃 ---
             f_5 = float(max(5.0, math.ceil((i_flow_p4 * 24) / 5.0) * 5.0))
             c_5 = (b1_bw * 6.0) * (f_5 / 5.0)
             k_5 = (c_5 / f_5) * i_flow_p4 * 1000 / 60 / b1_bw
@@ -781,7 +781,7 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
             st.markdown(f"<div style='background-color:{bg_5}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_5}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:20)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_5:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_5:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_5:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_5:.2f} mg 加入 D5W 至 {f_5:.0f} mL", language="text")
 
-            # --- 6. 組套 (2:1) —— 🛡️ Norepinephrine 臨床安全極限上限 ---
+            # --- 6. 組套 (2:1) —— 🛡️ Norepinephrine 建議最高安全濃度 ---
             f_6 = float(max(20.0, math.ceil((i_flow_p4 * 24) / 20.0) * 20.0))
             c_6 = (b1_bw * 0.6) * (f_6 / 20.0)
             k_6 = (c_6 / f_6) * i_flow_p4 * 1000 / 60 / b1_bw
