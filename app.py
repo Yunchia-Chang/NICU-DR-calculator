@@ -732,49 +732,75 @@ if main_page == "🔌 升壓劑.止痛鎮靜pump":
         st.write("---")
         st.markdown(f"#### 🎯 當前藥物：<span style='color:#1E88E5;'>{s_drug_p4}</span> | 設定流速：<span style='color:#4CAF50;'>{i_flow_p4:.1f} mL/hr</span>", unsafe_allow_html=True)
         
-        if i_flow_p4 > 0:
+      if i_flow_p4 > 0:
+            is_norepi = (s_drug_p4 == "Norepinephrine")
+            warn_msg_over_conc = "<p style='margin:4px 0 0 0; color:#ff4444; font-size:12px; font-weight:bold;'>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>"
+
+            # --- 1. 組套 (1:1) —— ⚠️ Norepinephrine 超濃危險 ---
             f_1 = float(max(10.0, math.ceil((i_flow_p4 * 24) / 10.0) * 10.0))
-            c_1 = (b1_bw * 0.6) * (f_1 / 10.0); k_1 = (c_1 / f_1) * i_flow_p4 * 1000 / 60 / b1_bw
-            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_1:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_1:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_1:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            c_1 = (b1_bw * 0.6) * (f_1 / 10.0)
+            k_1 = (c_1 / f_1) * i_flow_p4 * 1000 / 60 / b1_bw
+            bg_1 = "#3c1414" if is_norepi else "#13171a"
+            bd_1 = "#ff4444" if is_norepi else "#1E88E5"
+            st.markdown(f"<div style='background-color:{bg_1}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_1}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_1:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_1:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_1:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_1:.2f} mg 加入 D5W 至 {f_1:.0f} mL", language="text")
 
+            # --- 2. 組套 (1:2) —— ⚠️ Norepinephrine 超濃危險 ---
             f_2 = float(max(5.0, math.ceil((i_flow_p4 * 24) / 5.0) * 5.0))
-            c_2 = (b1_bw * 0.6) * (f_2 / 5.0); k_2 = (c_2 / f_2) * i_flow_p4 * 1000 / 60 / b1_bw
-            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:2)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_2:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_2:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_2:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            c_2 = (b1_bw * 0.6) * (f_2 / 5.0)
+            k_2 = (c_2 / f_2) * i_flow_p4 * 1000 / 60 / b1_bw
+            bg_2 = "#3c1414" if is_norepi else "#13171a"
+            bd_2 = "#ff4444" if is_norepi else "#1E88E5"
+            st.markdown(f"<div style='background-color:{bg_2}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_2}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:2)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_2:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_2:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_2:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_2:.2f} mg 加入 D5W 至 {f_2:.0f} mL", language="text")
 
+            # --- 3. 組套 (1:5) —— ⚠️ Norepinephrine 超濃危險 ---
             f_3 = float(max(20.0, math.ceil((i_flow_p4 * 24) / 20.0) * 20.0))
-            c_3 = (b1_bw * 6.0) * (f_3 / 20.0); k_3 = (c_3 / f_3) * i_flow_p4 * 1000 / 60 / b1_bw
-            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:5)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_3:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_3:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_3:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            c_3 = (b1_bw * 6.0) * (f_3 / 20.0)
+            k_3 = (c_3 / f_3) * i_flow_p4 * 1000 / 60 / b1_bw
+            bg_3 = "#3c1414" if is_norepi else "#13171a"
+            bd_3 = "#ff4444" if is_norepi else "#1E88E5"
+            st.markdown(f"<div style='background-color:{bg_3}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_3}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:5)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_3:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_3:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_3:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_3:.2f} mg 加入 D5W 至 {f_3:.0f} mL", language="text")
 
+            # --- 4. 組套 (1:10) —— ⚠️ Norepinephrine 超濃危險 ---
             f_4 = float(max(10.0, math.ceil((i_flow_p4 * 24) / 10.0) * 10.0))
-            c_4 = (b1_bw * 6.0) * (f_4 / 10.0); k_4 = (c_4 / f_4) * i_flow_p4 * 1000 / 60 / b1_bw
-            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:10)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_4:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_4:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_4:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            c_4 = (b1_bw * 6.0) * (f_4 / 10.0)
+            k_4 = (c_4 / f_4) * i_flow_p4 * 1000 / 60 / b1_bw
+            bg_4 = "#3c1414" if is_norepi else "#13171a"
+            bd_4 = "#ff4444" if is_norepi else "#1E88E5"
+            st.markdown(f"<div style='background-color:{bg_4}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_4}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:10)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_4:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_4:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_4:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_4:.2f} mg 加入 D5W 至 {f_4:.0f} mL", language="text")
 
+            # --- 5. 組套 (1:20) —— ⚠️ Norepinephrine 超濃危險 ---
             f_5 = float(max(5.0, math.ceil((i_flow_p4 * 24) / 5.0) * 5.0))
-            c_5 = (b1_bw * 6.0) * (f_5 / 5.0); k_5 = (c_5 / f_5) * i_flow_p4 * 1000 / 60 / b1_bw
-            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:20)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_5:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_5:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_5:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            c_5 = (b1_bw * 6.0) * (f_5 / 5.0)
+            k_5 = (c_5 / f_5) * i_flow_p4 * 1000 / 60 / b1_bw
+            bg_5 = "#3c1414" if is_norepi else "#13171a"
+            bd_5 = "#ff4444" if is_norepi else "#1E88E5"
+            st.markdown(f"<div style='background-color:{bg_5}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_5}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (1:20)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_5:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_5:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_5:.3f} mcg/kg/min</span></p>{warn_msg_over_conc if is_norepi else ''}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_5:.2f} mg 加入 D5W 至 {f_5:.0f} mL", language="text")
 
+            # --- 6. 組套 (2:1) —— 🛡️ Norepinephrine 臨床安全極限上限 ---
             f_6 = float(max(20.0, math.ceil((i_flow_p4 * 24) / 20.0) * 20.0))
-            c_6 = (b1_bw * 0.6) * (f_6 / 20.0); k_6 = (c_6 / f_6) * i_flow_p4 * 1000 / 60 / b1_bw
-            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (2:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_6:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_6:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_6:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
+            c_6 = (b1_bw * 0.6) * (f_6 / 20.0)
+            k_6 = (c_6 / f_6) * i_flow_p4 * 1000 / 60 / b1_bw
+            limit_msg = "<p style='margin:4px 0 0 0; color:#ffb300; font-size:12px; font-weight:bold;'>🛡️ 臨床安全極限：此為 Norepinephrine 建議之最高安全濃度配置。</p>" if is_norepi else ""
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (2:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_6:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_6:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_6:.3f} mcg/kg/min</span></p>{limit_msg}</div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_6:.2f} mg 加入 D5W 至 {f_6:.0f} mL", language="text")
 
+            # --- 7. 組套 (5:1) —— ✅ 稀釋安全 ---
             f_7 = float(max(50.0, math.ceil((i_flow_p4 * 24) / 50.0) * 50.0))
-            c_7 = (b1_bw * 0.6) * (f_7 / 50.0); k_7 = (c_7 / f_7) * i_flow_p4 * 1000 / 60 / b1_bw
-            is_n_danger_7 = (s_drug_p4 == "Norepinephrine")
-            bg_7 = "#3c1414" if is_n_danger_7 else "#13171a"; bd_7 = "#ff4444" if is_n_danger_7 else "#1E88E5"
-            st.markdown(f"<div style='background-color:{bg_7}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_7}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (5:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_7:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_7:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_7:.3f} mcg/kg/min</span></p>{' <p style=margin:4px_0_0_0; _color:#ff4444; _font-size:12px; _font-weight:bold;>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>' if is_n_danger_7 else ''}</div>", unsafe_allow_html=True)
+            c_7 = (b1_bw * 0.6) * (f_7 / 50.0)
+            k_7 = (c_7 / f_7) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (5:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_7:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_7:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_7:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_7:.2f} mg 加入 D5W 至 {f_7:.0f} mL", language="text")
 
+            # --- 8. 組套 (10:1) —— ✅ 稀釋安全 ---
             f_8 = float(max(100.0, math.ceil((i_flow_p4 * 24) / 100.0) * 100.0))
-            c_8 = (b1_bw * 0.6) * (f_8 / 100.0); k_8 = (c_8 / f_8) * i_flow_p4 * 1000 / 60 / b1_bw
-            is_n_danger_8 = (s_drug_p4 == "Norepinephrine")
-            bg_8 = "#3c1414" if is_n_danger_8 else "#13171a"; bd_8 = "#ff4444" if is_n_danger_8 else "#1E88E5"
-            st.markdown(f"<div style='background-color:{bg_8}; padding:10px 14px; border-radius:4px; border-left:4px solid {bd_8}; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (10:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_8:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_8:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_8:.3f} mcg/kg/min</span></p>{' <p style=margin:4px_0_0_0; _color:#ff4444; _font-size:12px; _font-weight:bold;>⚠️ 臨床警告：Norepinephrine 建議最濃為 2:1！此配置已高於安全極限濃度！</p>' if is_n_danger_8 else ''}</div>", unsafe_allow_html=True)
+            c_8 = (b1_bw * 0.6) * (f_8 / 100.0)
+            k_8 = (c_8 / f_8) * i_flow_p4 * 1000 / 60 / b1_bw
+            st.markdown(f"<div style='background-color:#13171a; padding:10px 14px; border-radius:4px; border-left:4px solid #1E88E5; margin-bottom:6px;'><span style='font-size:14px; font-weight:bold; color:#64B5F6;'>組套 (10:1)</span><p style='margin:4px 0 0 0; font-size:20px; font-weight:bold; color:#1E88E5;'>{c_8:.2f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mg</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; D5W 至 {f_8:.0f} <span style='font-size:12px; color:#fff; font-weight:normal;'>mL</span> &nbsp;<span style='color:#555; font-weight:normal;'>|</span>&nbsp; <span style='color:#4CAF50;'>{k_8:.3f} mcg/kg/min</span></p></div>", unsafe_allow_html=True)
             st.code(f"抽取 {s_drug_p4} {c_8:.2f} mg 加入 D5W 至 {f_8:.0f} mL", language="text")
         else:
             st.info("💡 請輸入大於 0 的幫浦流速開始即時演算。")
