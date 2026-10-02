@@ -836,14 +836,14 @@ if main_page == "🩸 Vasopressin pump":
         
         vaso_mode = st.sidebar.radio(
             "🗂️ 當前計算機切換（亦可於此點選）：",
-            ["1. Vasopressin - shock / PPHN (多組套流速回推劑量)", "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)"],
+            ["1. Vasopressin - shock / PPHN (多組套流速回推劑量)", "2. Vasopressin - Diabetes insipidus (尿崩症pump)"],
             key="vaso_sidebar_sync_key"
         )
         
         # 主畫面同步點選器（改為縱向大字體，排版更顯眼，完全消滅橫向被吃字的問題）
         vaso_mode = st.radio(
             "請直接勾選：",
-            ["1. Vasopressin - shock / PPHN (多組套流速回推劑量)", "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)"],
+            ["1. Vasopressin - shock / PPHN (多組套流速回推劑量)", "2. Vasopressin - Diabetes insipidus (尿崩症pump)"],
             horizontal=False,
             label_visibility="collapsed",
             key="vaso_mode_selector"
