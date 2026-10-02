@@ -897,7 +897,7 @@ if main_page == "🩸 Vasopressin pump":
                 st.info("💡 請輸入大於 0 的幫浦流速開始即時演算。")
 
         # ---------------------------------------------------------------------
-        # 適應症 2: Vasopressin-Diabetes insipidus (尿崩症) —— 🛠️ 完美對齊開門字眼！
+        # 適應症 2: Vasopressin-Diabetes insipidus (尿崩症pump) —— 🛠️ 完美對齊開門字眼！
         # ---------------------------------------------------------------------
         elif vaso_mode == "2. Vasopressin - Diabetes insipidus (尿崩症pump)":
             with st.container(border=True):
