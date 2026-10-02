@@ -706,7 +706,7 @@ if main_page == "🫁 DART.BURST":
 # 🔌 區塊 4: 升壓劑.止痛鎮靜pump (已校準縮排與 Norepinephrine 警示邏輯)
 # =============================================================================
 if main_page == "🔌 升壓劑.止痛鎮靜pump":
-    st.markdown("### 🔌 升壓劑.止痛鎮靜幫浦 - 多配方動態演算面板")
+    st.markdown("### 🔌 升壓劑.止痛鎮靜pump - 多配方計算")
     
     if "fixed_drug_p4" not in st.session_state:
         st.session_state["fixed_drug_p4"] = "Dopamine"
@@ -899,7 +899,7 @@ if main_page == "🩸 Vasopressin pump":
         # ---------------------------------------------------------------------
         # 適應症 2: Vasopressin-Diabetes insipidus (尿崩症) —— 🛠️ 完美對齊開門字眼！
         # ---------------------------------------------------------------------
-        elif vaso_mode == "2. Vasopressin - Diabetes insipidus (尿崩症調配面板)":
+        elif vaso_mode == "2. Vasopressin - Diabetes insipidus (尿崩症pump)":
             with st.container(border=True):
                 st.markdown("<p style='margin:0; font-size:14px; font-weight:bold; color:#4CAF50;'>📋 Vasopressin - Diabetes insipidus 臨床指引範圍</p>", unsafe_allow_html=True)
                 st.markdown("<div>• <b>建議劑量範圍</b>: 0.008 - 0.033 milliunits/kg/min</div>", unsafe_allow_html=True)
@@ -954,7 +954,7 @@ if main_page == "🩸 Vasopressin pump":
 # 🧬 區塊 4-3: Prostaglandin E1與利尿劑pump —— 🧪 動態基數配方演算面板
 # =============================================================================
 if main_page == "🧬 Prostaglandin E1與利尿劑pump":
-    st.markdown("<h3 style='color: #4DB6AC;'>🧬 Prostaglandin E1 與利尿劑幫浦面板</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #4DB6AC;'>🧬 Prostaglandin E1 與利尿劑pump</h3>", unsafe_allow_html=True)
     
     if not has_input:
         st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動啟動演算面板。")
@@ -1059,7 +1059,7 @@ if main_page == "🧬 Prostaglandin E1與利尿劑pump":
 # 💉 區塊 4-4: Insulin pump —— 🧪 完美對齊 Excel 初始流速校正版
 # =============================================================================
 if main_page == "💉 Insulin pump":
-    st.markdown("<h3 style='color: #4954bc;'>💉 Insulin aspart (速效胰島素) 幫浦面板</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #4954bc;'>💉 Insulin aspart (速效胰島素) pump</h3>", unsafe_allow_html=True)
     
     if not has_input:
         st.warning("⚠️ 請先於左側輸入「BW 體重」及「GA 週數」，系統將自動啟動 Insulin 演算列表。")
